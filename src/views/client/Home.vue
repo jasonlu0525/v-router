@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="@/assets//logo.png" />
-
     <div id="nav">
       <router-link to="/cart">cart</router-link> |
       <router-link to="/">product</router-link> |
@@ -9,7 +7,6 @@
     </div>
   </div>
   <router-view />
-
 </template>
 
 <script>
