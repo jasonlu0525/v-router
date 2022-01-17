@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/v-router/'
+  publicPath: '/v-router/dist/'
 }
