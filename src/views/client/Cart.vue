@@ -1,5 +1,1 @@
-<template>
-
-ul>li
-
-</template>
+<template>ul>li</template>

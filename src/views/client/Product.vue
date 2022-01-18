@@ -5,26 +5,16 @@
     <div class="row justify-content-end">
       <div class="col-lg-10 mb-3">
         <ul class="row list-unstyled">
-          <li
-            class="col-md-6 col-lg-4 mb-3 p-3"
-            v-for="item in data.products"
-            :key="item.id"
-          >
+          <li class="col-md-6 col-lg-4 mb-3 p-3" v-for="item in data.products" :key="item.id">
             <div class="card">
               <div class="card-hover">
-                <img
-                  :src="item.imageUrl"
-                  class="card-img card-img-top"
-                  :alt="item.description"
-                />
+                <img :src="item.imageUrl" class="card-img card-img-top" :alt="item.description" />
 
                 <div class="card-body">
                   <h5 class="card-title">{{ item.title }}</h5>
                   <p class="card-text">{{ item.description }}</p>
                   <p>
-                    原價 :<del> {{ item.origin_price.toLocaleString() }}元</del>/{{
-                      item.unit
-                    }}
+                    原價 :<del> {{ item.origin_price.toLocaleString() }}元</del>/{{ item.unit }}
                   </p>
                   <p>特價 : {{ item.price.toLocaleString() }}元/{{ item.unit }}</p>
                   <div class="row">
@@ -40,10 +30,7 @@
                       <a
                         href="#"
                         class="w-100 btn btn-secondary stretcked-link"
-                        @click.prevent="
-                          $refs.detailModal.detailModal.show(),
-                            ($refs.detailModal.singleProductData = item)
-                        "
+                        @click.prevent="createModal()"
                         >了解更多</a
                       >
                     </div>
@@ -53,7 +40,7 @@
             </div>
           </li>
         </ul>
-        <!--   <detail-modal ref="detailModal" ></detail-modal> -->
+        <detail-modal ref="detailModalDom"></detail-modal>
 
         <pagination
           :prop-pagination="data.pagination"
@@ -73,42 +60,27 @@
 <script>
 // inject
 import { ref } from 'vue';
-// import { useLoading } from 'vue-loading-overlay';
+// import { Modal } from 'bootstrap';
 import commonPackage from '@/components/utils/commonPackage';
 import pagination from '@/components/Pagination.vue';
+
+import detailModal from '@/components/DetailModal.vue';
 
 export default {
   components: {
     pagination,
+    detailModal,
   },
   setup() {
-    const { getProduct } = commonPackage();
+    const { getProduct, postProduct } = commonPackage();
     const data = ref({});
-
-    console.log(getProduct());
+    const detailModalDom = ref(null);
 
     getProduct().then((result) => {
-      console.log(result);
+      console.log(result, '0k');
       data.value = result.data;
     });
 
-    console.log(data.value);
-    // const axios = inject('axios');
-    // 常用套件包
-
-    // const $loading = loader();
-
-    // 初始化 get 第一頁
-    // axios
-    //   .get(`${process.env.VUE_APP_APIPATH}/products?page=1`)
-    //   .then((result) => {
-    //     $loading.hide();
-    //     data.value = result.data;
-    //     console.log(result);
-    //   })
-    //   .catch((err) => {
-    //     console.dir(err);
-    //   });
     const onChangePage = (page) => {
       console.log(page);
 
@@ -117,7 +89,23 @@ export default {
         data.value = result.data;
       });
     };
-    return { data, onChangePage };
+
+    const addToCart = function (prodcutInfo) {
+      postProduct(prodcutInfo);
+    };
+
+    const createModal = () => {
+      /* detailModalDom.value.detailModal
+      = new Modal(document.querySelector('#detailModal')).show() */
+    };
+
+    return {
+      data,
+      detailModalDom,
+      onChangePage,
+      addToCart,
+      createModal,
+    };
   },
 };
 </script>
