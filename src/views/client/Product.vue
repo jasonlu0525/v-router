@@ -1,11 +1,22 @@
 <template>
   <section class="container">
     <h2>產品</h2>
-
+    <ul class="mb-0">
+      <li>
+        <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
+          >購物車 <i class="bi bi-cart-fill"></i>
+        </a>
+      </li>
+    </ul>
+    <offfanvas-shopping-cart :prop-shopping-cart="cartData"></offfanvas-shopping-cart>
     <div class="row justify-content-end">
       <div class="col-lg-10 mb-3">
         <ul class="row list-unstyled">
-          <li class="col-md-6 col-lg-4 mb-3 p-3" v-for="item in data.products" :key="item.id">
+          <li
+            class="col-md-6 col-lg-4 mb-3 p-3"
+            v-for="item in productData.products"
+            :key="item.id"
+          >
             <div class="card">
               <div class="card-hover">
                 <img :src="item.imageUrl" class="card-img card-img-top" :alt="item.description" />
@@ -30,7 +41,7 @@
                       <a
                         href="#"
                         class="w-100 btn btn-secondary stretcked-link"
-                        @click.prevent="createModal()"
+                        @click.prevent="createModal(item)"
                         >了解更多</a
                       >
                     </div>
@@ -43,7 +54,7 @@
         <detail-modal ref="detailModalDom"></detail-modal>
 
         <pagination
-          :prop-pagination="data.pagination"
+          :prop-pagination="productData.pagination"
           @emit-change-page="onChangePage"
         ></pagination>
       </div>
@@ -63,22 +74,28 @@ import { ref } from 'vue';
 // import { Modal } from 'bootstrap';
 import commonPackage from '@/components/utils/commonPackage';
 import pagination from '@/components/Pagination.vue';
-
+import offfanvasShoppingCart from '@/components/CartOffcanvas.vue';
 import detailModal from '@/components/DetailModal.vue';
 
 export default {
   components: {
     pagination,
     detailModal,
+    offfanvasShoppingCart,
   },
   setup() {
-    const { getProduct, postProduct } = commonPackage();
-    const data = ref({});
+    const { getProduct, postCart, getCart } = commonPackage();
+    const productData = ref({});
+    const cartData = ref({});
     const detailModalDom = ref(null);
 
     getProduct().then((result) => {
-      console.log(result, '0k');
-      data.value = result.data;
+      console.log(result, 'product 0k');
+      productData.value = result.data;
+    });
+    getCart().then((result) => {
+      console.log(result, 'cart 0k');
+      cartData.value = result.data.data;
     });
 
     const onChangePage = (page) => {
@@ -86,21 +103,25 @@ export default {
 
       getProduct(page).then((result) => {
         console.log(result);
-        data.value = result.data;
+        productData.value = result.data;
       });
     };
 
     const addToCart = function (prodcutInfo) {
-      postProduct(prodcutInfo);
+      console.log(prodcutInfo);
+      postCart(prodcutInfo);
     };
 
-    const createModal = () => {
-      /* detailModalDom.value.detailModal
-      = new Modal(document.querySelector('#detailModal')).show() */
+    const createModal = (singleProductObj) => {
+      /*      detailModalDom.value.detailModal
+      = new Modal(document.querySelector('#detailModal')).show();
+*/
+      detailModalDom.value.singleProductData = singleProductObj;
     };
 
     return {
-      data,
+      productData,
+      cartData,
       detailModalDom,
       onChangePage,
       addToCart,

@@ -1,8 +1,9 @@
 <template>
   <div class="home">
-    <div id="nav">
-      <router-link to="/cart">cart</router-link> | <router-link to="/">product</router-link> |
-      <router-link to="/login">login</router-link> |
+    <div class="d-flex justify-content-center">
+      <router-link class="px-3" to="/cart">cart</router-link> |
+      <router-link class="px-3" to="/">product</router-link> |
+      <router-link class="px-3" to="/login">login</router-link> |
     </div>
   </div>
   <router-view />

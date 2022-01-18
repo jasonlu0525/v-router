@@ -26,10 +26,13 @@
             </div>
             <div class="col-lg-6 d-flex flex-column justify-content-between">
               <div>
-                <span class="badge bg-primary mb-3"> {{ singleProductData.category }} </span>
+                <span class="badge bg-primary mb-3">
+                  {{ singleProductData.category }}
+                </span>
                 <p class="mb-3">{{ singleProductData.description }}</p>
                 <p>
-                  NT$ {{ singleProductData.price }} <del>{{ singleProductData.origin_price }}</del>
+                  NT$ {{ singleProductData.price }}
+                  <del>{{ singleProductData.origin_price }}</del>
                 </p>
               </div>
 
@@ -37,7 +40,11 @@
                 type="button"
                 class="btn btn-primary"
                 @click="
-                  $parent.addToCart({ product_id: singleProductData.id, qty: 1, singleProductData })
+                  postProduct({
+                    product_id: singleProductData.id,
+                    qty: 1,
+                    singleProductData,
+                  })
                 "
               >
                 加入購物車
@@ -53,9 +60,12 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
+import commonPackage from '@/components/utils/commonPackage';
+// ;
 
 export default {
   setup() {
+    const { postProduct } = commonPackage();
     const singleProductData = ref({});
     // const detailModal = new Modal(document.querySelector('#detailModal'));
     let detailModal = null;
@@ -67,6 +77,7 @@ export default {
     return {
       singleProductData,
       detailModal,
+      postProduct,
     };
   },
 };

@@ -13,4 +13,7 @@ export default {
 
 <style lang="scss">
 @import 'bootstrap';
+@import '~bootstrap-icons/font/bootstrap-icons.css';
+
+@import './assets/stylesheet/base.scss';
 </style>
