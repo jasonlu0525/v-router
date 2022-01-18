@@ -51,14 +51,19 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 
 export default {
   setup() {
     const singleProductData = ref({});
-    const detailModal = new Modal(document.querySelector('#detailModal'));
-    // const detailModal = null;
+    // const detailModal = new Modal(document.querySelector('#detailModal'));
+    let detailModal = null;
+
+    onMounted(() => {
+      detailModal = new Modal(document.querySelector('#detailModal'));
+    });
+
     return {
       singleProductData,
       detailModal,
