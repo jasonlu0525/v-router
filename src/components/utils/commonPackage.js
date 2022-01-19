@@ -4,8 +4,6 @@ import { useLoading } from 'vue-loading-overlay';
 
 import axios from 'axios';
 
-axios.delete('https://vue3-course-api.hexschool.io/v2/api/jason81133/carts');
-
 export default function () {
   // API route
   const apiPath = process.env.VUE_APP_APIPATH;

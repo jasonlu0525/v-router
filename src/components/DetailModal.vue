@@ -40,10 +40,9 @@
                 type="button"
                 class="btn btn-primary"
                 @click="
-                  postCart({
+                  $emit('emit-addToCart', {
                     product_id: singleProductData.id,
                     qty: 1,
-                    singleProductData,
                   })
                 "
               >
@@ -61,16 +60,15 @@
 // onMounted
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
-import commonPackage from '@/components/utils/commonPackage';
 // ;
 
 export default {
   setup() {
-    const { postCart, getCart } = commonPackage();
     const singleProductData = ref({});
+    console.log(singleProductData);
     // const detailModal = new Modal(document.querySelector('#detailModal'));
     let detailModal = null;
-
+    //  const test = ref({});
     onMounted(() => {
       detailModal = new Modal(document.querySelector('#detailModal'));
     });
@@ -78,8 +76,6 @@ export default {
     return {
       singleProductData,
       detailModal,
-      postCart,
-      getCart,
     };
   },
 };

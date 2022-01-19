@@ -32,7 +32,7 @@
                 @click="
                   changeQty({
                     qty: item.qty - 1,
-                    product_id: item.product_id,
+                    product_id: item.id,
                   }),
                     reCalculatePrice({ item, qty: item.qty - 1, prop: propShoppingCart })
                 "
@@ -45,7 +45,7 @@
                 @click="
                   changeQty({
                     qty: item.qty + 1,
-                    product_id: item.product_id,
+                    product_id: item.id,
                   }),
                     reCalculatePrice({ item, qty: item.qty + 1, prop: propShoppingCart })
                 "
@@ -69,11 +69,15 @@
   </div>
 </template>
 <script>
+import { toRefs } from 'vue';
 import commonPackage from '@/components/utils/commonPackage';
 
 export default {
   props: ['propShoppingCart'],
-  setup() {
+  setup(props) {
+    console.log(props);
+    const { propShoppingCart } = toRefs(props);
+    console.log(props, propShoppingCart);
     const { putCart, deleteCart } = commonPackage();
 
     const changeQty = function (productInfo) {
@@ -87,6 +91,7 @@ export default {
         });
     };
     const reCalculatePrice = (reCalculateObj) => {
+      console.log(94, propShoppingCart);
       const { item, qty, prop } = reCalculateObj;
 
       // 變動的價錢

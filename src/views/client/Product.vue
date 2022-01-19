@@ -1,12 +1,13 @@
 <template>
+  <ul class="mb-0">
+    <li>
+      <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
+        >購物車 <i class="bi bi-cart-fill"></i>
+      </a>
+    </li>
+  </ul>
+
   <section class="container">
-    <ul class="mb-0">
-      <li>
-        <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
-          >購物車 <i class="bi bi-cart-fill"></i>
-        </a>
-      </li>
-    </ul>
     <h2>產品</h2>
 
     <offfanvas-shopping-cart :prop-shopping-cart="cartData"></offfanvas-shopping-cart>
@@ -34,7 +35,7 @@
                       <a
                         href="#"
                         class="w-100 btn btn-primary stretcked-link"
-                        @click.prevent="addToCart({ product_id: item.id, qty: 1, item })"
+                        @click.prevent="addToCart({ product_id: item.id, qty: 1 })"
                         >加入購物車</a
                       >
                     </div>
@@ -52,7 +53,7 @@
             </div>
           </li>
         </ul>
-        <detail-modal ref="detailModalDom"></detail-modal>
+        <detail-modal ref="detailModalDom" @emit-add-to-cart="addToCart"></detail-modal>
 
         <pagination
           :prop-pagination="productData.pagination"
@@ -73,10 +74,13 @@
 // inject
 import { ref } from 'vue';
 // import { Modal } from 'bootstrap';
+// import axios from 'axios';
 import commonPackage from '@/components/utils/commonPackage';
 import pagination from '@/components/Pagination.vue';
 import offfanvasShoppingCart from '@/components/CartOffcanvas.vue';
 import detailModal from '@/components/DetailModal.vue';
+
+// axios.delete('https://vue3-course-api.hexschool.io/v2/api/jason/carts');
 
 export default {
   components: {
@@ -111,14 +115,26 @@ export default {
     const addToCart = function (prodcutInfo) {
       console.log(prodcutInfo);
 
-      postCart(prodcutInfo);
+      postCart(prodcutInfo)
+        .then(() => {
+          getCart().then((result) => {
+            console.log(result, 'cart 0k');
+            cartData.value = result.data.data;
+          });
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
     };
 
     const createModal = (singleProductObj) => {
-      // detailModalDom.value.detailModal =
-      // new Modal(document.querySelector('#detailModal')).show();
+      console.log(singleProductObj);
+      // detailModalDom.value.detailModal
+      // = new Modal(document.querySelector('#detailModal')).show();
       detailModalDom.value.detailModal.show();
+      //    console.log(detailModalDom.value);
       detailModalDom.value.singleProductData = singleProductObj;
+      console.log(detailModalDom);
     };
 
     return {
