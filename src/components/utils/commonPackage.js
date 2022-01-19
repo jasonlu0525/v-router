@@ -65,6 +65,10 @@ export default function () {
     },
   });
 
+  const deleteCart = (id) => taskQueue({
+    method: 'delete',
+    path: `cart/${id}`,
+  });
   return {
     loader,
     getProduct,
@@ -72,5 +76,6 @@ export default function () {
     postCart,
     getCart,
     putCart,
+    deleteCart,
   };
 }

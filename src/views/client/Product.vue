@@ -1,6 +1,5 @@
 <template>
   <section class="container">
-    <h2>產品</h2>
     <ul class="mb-0">
       <li>
         <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
@@ -8,6 +7,8 @@
         </a>
       </li>
     </ul>
+    <h2>產品</h2>
+
     <offfanvas-shopping-cart :prop-shopping-cart="cartData"></offfanvas-shopping-cart>
     <div class="row justify-content-end">
       <div class="col-lg-10 mb-3">
@@ -109,13 +110,14 @@ export default {
 
     const addToCart = function (prodcutInfo) {
       console.log(prodcutInfo);
+
       postCart(prodcutInfo);
     };
 
     const createModal = (singleProductObj) => {
-      /*      detailModalDom.value.detailModal
-      = new Modal(document.querySelector('#detailModal')).show();
-*/
+      // detailModalDom.value.detailModal =
+      // new Modal(document.querySelector('#detailModal')).show();
+      detailModalDom.value.detailModal.show();
       detailModalDom.value.singleProductData = singleProductObj;
     };
 

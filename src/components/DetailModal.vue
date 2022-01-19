@@ -40,7 +40,7 @@
                 type="button"
                 class="btn btn-primary"
                 @click="
-                  postProduct({
+                  postCart({
                     product_id: singleProductData.id,
                     qty: 1,
                     singleProductData,
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+// onMounted
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 import commonPackage from '@/components/utils/commonPackage';
@@ -65,7 +66,7 @@ import commonPackage from '@/components/utils/commonPackage';
 
 export default {
   setup() {
-    const { postProduct } = commonPackage();
+    const { postCart, getCart } = commonPackage();
     const singleProductData = ref({});
     // const detailModal = new Modal(document.querySelector('#detailModal'));
     let detailModal = null;
@@ -77,7 +78,8 @@ export default {
     return {
       singleProductData,
       detailModal,
-      postProduct,
+      postCart,
+      getCart,
     };
   },
 };

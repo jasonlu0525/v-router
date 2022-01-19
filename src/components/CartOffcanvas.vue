@@ -54,16 +54,7 @@
               </span>
             </div>
           </div>
-          <a
-            href="#"
-            class="col-2 text-center"
-            @click="
-              $emit('emit-deleteCart', {
-                parent: parent,
-                data: { id: item.id, title: item.product.titl, prop: propShoppingCart },
-              })
-            "
-            title="確定要刪掉嗎 QQ"
+          <a href="#" class="col-2 text-center" @click="deleteCart(item.id)" title="確定要刪掉嗎 QQ"
             ><i class="bi bi-trash-fill fs-4 link"></i
           ></a>
         </li>
@@ -83,7 +74,7 @@ import commonPackage from '@/components/utils/commonPackage';
 export default {
   props: ['propShoppingCart'],
   setup() {
-    const { putCart } = commonPackage();
+    const { putCart, deleteCart } = commonPackage();
 
     const changeQty = function (productInfo) {
       console.log(productInfo);
@@ -110,6 +101,7 @@ export default {
     };
     return {
       putCart,
+      deleteCart,
       changeQty,
       reCalculatePrice,
     };
