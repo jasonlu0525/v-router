@@ -43,8 +43,8 @@
                 class="d-block ps-2 | cursor-pointer"
                 @click="
                   changeQty({
-                    qty: item.qty + 1,
-                    product_id: item.id,
+                    config: { qty: item.qty + 1, product_id: item.product_id },
+                    id: item.id,
                   })
                 "
               >
@@ -87,7 +87,7 @@ export default {
       console.log('productInfo', productInfo.product_id);
       console.log(productInfo);
       putCart(productInfo)
-        .then(() => getCart())
+        .then(() => getCart(false))
         .then((result) => {
           emit('emit-put-cart', result.data.data);
         })
@@ -98,7 +98,7 @@ export default {
 
     const emitDeleteCart = (id) => {
       deleteCart(id)
-        .then(() => getCart())
+        .then(() => getCart(false))
         .catch((err) => {
           console.log(err);
         })

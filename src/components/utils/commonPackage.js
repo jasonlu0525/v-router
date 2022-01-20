@@ -19,9 +19,11 @@ export default function () {
   // 將非同步處理成 同步，並且將參數以物件解構的方式帶入，切換 requets 的方法
   async function taskQueue(
     // 解構
-    { method, path, config = '' },
+    {
+      method, path, config = '', generateLoader = true,
+    },
   ) {
-    const $loader = loader();
+    const $loader = generateLoader ? loader() : null;
     const response = await axios[method](`${apiPath}/${path}`, config);
     const { data } = response;
     console.log(data);
@@ -33,39 +35,48 @@ export default function () {
       //   data.success ? 'success' : 'error',
       // );
     }
-    $loader.hide();
+    if (generateLoader) {
+      $loader.hide();
+    }
+    // $loader === true ? $loader.hide() : '';
     return response;
   }
 
-  const getProduct = (page = 1) => taskQueue({
+  const getProduct = (page = 1, generateLoader) => taskQueue({
     method: 'get',
     path: `products?page=${page}`,
+    generateLoader,
   });
 
-  const postCart = (productInfo) => taskQueue({
+  const postCart = (productInfo, generateLoader) => taskQueue({
     method: 'post',
     path: 'cart',
     config: {
       data: productInfo,
     },
+    generateLoader,
   });
-  const getCart = () => taskQueue({
+  const getCart = (generateLoader) => taskQueue({
     method: 'get',
     path: 'cart',
+    generateLoader,
   });
 
-  const putCart = (productInfo) => taskQueue({
+  const putCart = (productInfo, generateLoader) => taskQueue({
     method: 'put',
     path: `cart/${productInfo.id}`,
     config: {
       data: productInfo.config,
     },
+    generateLoader,
   });
 
-  const deleteCart = (id) => taskQueue({
+  const deleteCart = (id, generateLoader) => taskQueue({
     method: 'delete',
     path: `cart/${id}`,
+    generateLoader,
   });
+
   return {
     loader,
     getProduct,

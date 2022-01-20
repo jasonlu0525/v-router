@@ -116,17 +116,12 @@ export default {
       });
     };
 
-    const refreshCart = (newCartdata) => {
-      // 刪除之後 新的 cartData
-      cartData.value = newCartdata;
-    };
-
     const addToCart = function (prodcutInfo) {
-      console.log('addToCart', prodcutInfo.product_id);
+      console.log(prodcutInfo);
 
       postCart(prodcutInfo)
         .then(() => {
-          getCart().then((result) => {
+          getCart(false).then((result) => {
             console.log(result, 'cart 0k');
             cartData.value = result.data.data;
           });
@@ -134,6 +129,11 @@ export default {
         .catch((err) => {
           console.dir(err);
         });
+    };
+
+    const refreshCart = (newCartdata) => {
+      // 刪除之後 新的 cartData
+      cartData.value = newCartdata;
     };
 
     const createModal = (singleProductObj) => {
@@ -148,18 +148,11 @@ export default {
     return {
       productData,
       cartData,
-
-      // emits 事件對接
-      onChangePage,
-      refreshCart,
-
-      // 加入購物車
-      addToCart,
-
-      // 打開 了解更多 modal、將 item 資料丟入 modal 元件
-      createModal,
-      // ref  modal 元件 的 DOM
       detailModalDom,
+      onChangePage,
+      addToCart,
+      createModal,
+      refreshCart,
     };
   },
 };
