@@ -10,7 +10,11 @@
   <section class="container">
     <h2>產品</h2>
 
-    <offfanvas-shopping-cart :prop-shopping-cart="cartData"></offfanvas-shopping-cart>
+    <offfanvas-shopping-cart
+      :prop-shopping-cart="cartData"
+      @emit-delete-cart="refreshCart"
+      @emit-put-cart="refreshCart"
+    ></offfanvas-shopping-cart>
     <div class="row justify-content-end">
       <div class="col-lg-10 mb-3">
         <ul class="row list-unstyled">
@@ -73,7 +77,7 @@
 <script>
 // inject
 import { ref } from 'vue';
-// import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 // import axios from 'axios';
 import commonPackage from '@/components/utils/commonPackage';
 import pagination from '@/components/Pagination.vue';
@@ -112,8 +116,13 @@ export default {
       });
     };
 
+    const refreshCart = (newCartdata) => {
+      // 刪除之後 新的 cartData
+      cartData.value = newCartdata;
+    };
+
     const addToCart = function (prodcutInfo) {
-      console.log(prodcutInfo);
+      console.log('addToCart', prodcutInfo.product_id);
 
       postCart(prodcutInfo)
         .then(() => {
@@ -129,9 +138,8 @@ export default {
 
     const createModal = (singleProductObj) => {
       console.log(singleProductObj);
-      // detailModalDom.value.detailModal
-      // = new Modal(document.querySelector('#detailModal')).show();
-      detailModalDom.value.detailModal.show();
+      detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
+      // detailModalDom.value.detailModal.show();
       //    console.log(detailModalDom.value);
       detailModalDom.value.singleProductData = singleProductObj;
       console.log(detailModalDom);
@@ -140,10 +148,18 @@ export default {
     return {
       productData,
       cartData,
-      detailModalDom,
+
+      // emits 事件對接
       onChangePage,
+      refreshCart,
+
+      // 加入購物車
       addToCart,
+
+      // 打開 了解更多 modal、將 item 資料丟入 modal 元件
       createModal,
+      // ref  modal 元件 的 DOM
+      detailModalDom,
     };
   },
 };

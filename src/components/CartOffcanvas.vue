@@ -31,10 +31,9 @@
                 :class="{ 'cursor-not-allowed': item.qty - 1 == 0 }"
                 @click="
                   changeQty({
-                    qty: item.qty - 1,
-                    product_id: item.id,
-                  }),
-                    reCalculatePrice({ item, qty: item.qty - 1, prop: propShoppingCart })
+                    config: { qty: item.qty - 1, product_id: item.product_id },
+                    id: item.id,
+                  })
                 "
               >
                 <i class="bi bi-dash"></i>
@@ -46,15 +45,18 @@
                   changeQty({
                     qty: item.qty + 1,
                     product_id: item.id,
-                  }),
-                    reCalculatePrice({ item, qty: item.qty + 1, prop: propShoppingCart })
+                  })
                 "
               >
                 <i class="bi bi-plus"></i>
               </span>
             </div>
           </div>
-          <a href="#" class="col-2 text-center" @click="deleteCart(item.id)" title="確定要刪掉嗎 QQ"
+          <a
+            href="#"
+            class="col-2 text-center"
+            @click="emitDeleteCart(item.id)"
+            title="確定要刪掉嗎 QQ"
             ><i class="bi bi-trash-fill fs-4 link"></i
           ></a>
         </li>
@@ -71,44 +73,48 @@
 <script>
 import { toRefs } from 'vue';
 import commonPackage from '@/components/utils/commonPackage';
+// import LoginVue from '../views/manager/Login.vue';
 
 export default {
   props: ['propShoppingCart'],
-  setup(props) {
+  setup(props, { emit }) {
     console.log(props);
     const { propShoppingCart } = toRefs(props);
     console.log(props, propShoppingCart);
-    const { putCart, deleteCart } = commonPackage();
+    const { putCart, deleteCart, getCart } = commonPackage();
 
     const changeQty = function (productInfo) {
+      console.log('productInfo', productInfo.product_id);
       console.log(productInfo);
       putCart(productInfo)
+        .then(() => getCart())
         .then((result) => {
-          console.log(result);
+          emit('emit-put-cart', result.data.data);
         })
         .catch((err) => {
-          console.dir(err);
+          console.log(err);
         });
     };
-    const reCalculatePrice = (reCalculateObj) => {
-      console.log(94, propShoppingCart);
-      const { item, qty, prop } = reCalculateObj;
 
-      // 變動的價錢
-      const changeRange = qty * item.product.price - item.qty * item.product.price;
-      item.qty = qty;
-      item.total = item.qty * item.product.price;
-      item.final_total = item.total;
-
-      prop.total += changeRange;
-      prop.final_total = prop.total;
-      console.log(changeRange);
+    const emitDeleteCart = (id) => {
+      deleteCart(id)
+        .then(() => getCart())
+        .catch((err) => {
+          console.log(err);
+        })
+        .then((result) => {
+          emit('emit-delete-cart', result.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
+
+    // 更新購物車品項數量與總金額
     return {
-      putCart,
-      deleteCart,
       changeQty,
-      reCalculatePrice,
+
+      emitDeleteCart,
     };
   },
 };

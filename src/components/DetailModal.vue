@@ -58,8 +58,8 @@
 
 <script>
 // onMounted
-import { ref, onMounted } from 'vue';
-import { Modal } from 'bootstrap';
+import { ref } from 'vue';
+// import { Modal } from 'bootstrap';
 // ;
 
 export default {
@@ -67,11 +67,11 @@ export default {
     const singleProductData = ref({});
     console.log(singleProductData);
     // const detailModal = new Modal(document.querySelector('#detailModal'));
-    let detailModal = null;
+    const detailModal = null;
     //  const test = ref({});
-    onMounted(() => {
-      detailModal = new Modal(document.querySelector('#detailModal'));
-    });
+    // onMounted(() => {
+    //   detailModal = new Modal(document.querySelector('#detailModal'));
+    // });
 
     return {
       singleProductData,

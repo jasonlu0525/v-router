@@ -33,7 +33,6 @@ export default function () {
       //   data.success ? 'success' : 'error',
       // );
     }
-
     $loader.hide();
     return response;
   }
@@ -57,9 +56,9 @@ export default function () {
 
   const putCart = (productInfo) => taskQueue({
     method: 'put',
-    path: `cart/${productInfo.product_id}`,
+    path: `cart/${productInfo.id}`,
     config: {
-      data: productInfo,
+      data: productInfo.config,
     },
   });
 
