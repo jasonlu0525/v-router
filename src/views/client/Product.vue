@@ -1,14 +1,13 @@
 <template>
-  <ul class="mb-0">
-    <li>
-      <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
-        >購物車 <i class="bi bi-cart-fill"></i>
-      </a>
-    </li>
-  </ul>
-
   <section class="container">
     <h2>產品</h2>
+    <ul class="mb-0">
+      <li>
+        <a href="#" class="d-block" data-bs-toggle="offcanvas" data-bs-target="#shpping-cart"
+          >購物車 <i class="bi bi-cart-fill"></i>
+        </a>
+      </li>
+    </ul>
 
     <offfanvas-shopping-cart
       :prop-shopping-cart="cartData"

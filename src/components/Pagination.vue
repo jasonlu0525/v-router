@@ -1,4 +1,4 @@
-<template>
+<template v-if="propPagination">
   <ul class="pagination justify-content-end">
     <li
       class="page-item"
@@ -47,7 +47,7 @@
 // inject
 
 export default {
-  props: ['prop-pagination'],
+  props: ['propPagination'],
   setup(props, { emit }) {
     const changePage = function (pageInfo) {
       if (!pageInfo.hasPrevOrNextPage) {
