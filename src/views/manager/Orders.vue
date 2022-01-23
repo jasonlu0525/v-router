@@ -37,6 +37,7 @@ export default {
       .then((result) => {
         console.log(36, result);
         orderData.value = result.data;
+
         console.log(orderData.value);
       })
       .catch((err) => {
