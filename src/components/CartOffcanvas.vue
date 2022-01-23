@@ -65,7 +65,7 @@
       <section class="position-absolute start-0 end-0 bottom-0 mb-0 bg-white px-3 py-4">
         <h3 class="fw-bold mb-3">總計: {{ propShoppingCart.final_total }}元</h3>
 
-        <a class="btn btn-dark w-100" href="./cart.html">前往購物車</a>
+        <router-link class="btn btn-dark w-100" to="/cart">前往購物車</router-link>
       </section>
     </div>
   </div>

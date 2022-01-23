@@ -3,12 +3,14 @@ import commonPackage from '@/components/utils/commonPackage';
 
 const CartDataModel = {
   props: ['propShoppingCart'],
-  emits: ['emit-put-cart', 'emit-delete-cart'],
+  emits: ['emit-put-cart', 'emit-delete-cart', 'emit-delete-all-cart'],
   setup(props, { emit }) {
     console.log(props);
     const { propShoppingCart } = toRefs(props);
     console.log(props, propShoppingCart);
-    const { putCart, deleteCart, getCart } = commonPackage();
+    const {
+      putCart, deleteCart, deleteCartAll, getCart,
+    } = commonPackage();
 
     const changeQty = function (productInfo) {
       console.log('productInfo', productInfo.product_id);
@@ -36,12 +38,21 @@ const CartDataModel = {
           console.log(err);
         });
     };
+    const emitDeleteCartAll = () => {
+      deleteCartAll()
+        .then(() => {
+          emit('emit-delete-all-cart');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     // 更新購物車品項數量與總金額
     return {
       changeQty,
-
       emitDeleteCart,
+      emitDeleteCartAll,
     };
   },
 };

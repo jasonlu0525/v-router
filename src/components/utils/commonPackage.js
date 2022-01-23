@@ -1,56 +1,106 @@
 import { useLoading } from 'vue-loading-overlay';
 
-// import swal from 'sweetalert';
+import swal from 'sweetalert';
 
 import axios from 'axios';
 
 export default function () {
   // API route
   const apiPath = process.env.VUE_APP_APIPATH;
-
+  // https://vue3-course-api.hexschool.io/v2
   // 啟用 loader 的 方法
   const loader = () => useLoading().show();
 
-  // const swalTrigger = (title, text, status) => {
-  //   console.log(title, text, status);
-  //   swal(title, text, status);
-  // };
+  const swalTrigger = (title, text, status) => {
+    console.log(title, text, status);
+
+    swal({
+      title,
+      text,
+      icon: status,
+      buttons: false,
+    });
+    setTimeout(() => {
+      if (swal.getState().isOpen) {
+        swal.close();
+      }
+    }, 1000);
+  };
+
+  //   axios.defaults.headers.common.Authorization = token;
 
   // 將非同步處理成 同步，並且將參數以物件解構的方式帶入，切換 requets 的方法
-  async function taskQueue(
+  function taskQueue(
     // 解構
     {
-      method, path, config = '', generateLoader = true,
+      method, path, config = '', generateLoader = true, Authorization = false,
     },
   ) {
-    const $loader = generateLoader ? loader() : null;
-    const response = await axios[method](`${apiPath}/${path}`, config);
-    const { data } = response;
-    console.log(data);
-    // 系統推播訊息
-    if (method !== 'get') {
-      // swalTrigger(
-      //   data.message,
-      //   `目前購物車內已有 ${data.data.qty}件 ${data.data.product ? data.data.product.title : ''} `,
-      //   data.success ? 'success' : 'error',
-      // );
+    const apiInstance = axios.create({
+      baseURL: apiPath,
+    });
+    if (Authorization) {
+      apiInstance.defaults.headers.common.Authorization = Authorization;
     }
-    if (generateLoader) {
-      $loader.hide();
-    }
-    // $loader === true ? $loader.hide() : '';
+    let $loader;
+
+    apiInstance.interceptors.request.use(
+      (res) => {
+        console.log('yes', res);
+        $loader = generateLoader ? loader() : null;
+        return res;
+      },
+      // Do something with request data
+      (err) => {
+        console.dir('err', err);
+        return Promise.reject(err);
+      },
+    );
+
+    apiInstance.interceptors.response.use(
+      (res) => {
+        console.log('yes', res);
+        if (generateLoader) {
+          $loader.hide();
+        }
+
+        // `目前購物車內有 ${res.data.data.qty} 件 ${res.data.data.product.title}`;
+        console.log(path !== 'api/user/check');
+        if (method.toLowerCase() !== 'get' && path !== 'api/user/check') {
+          // console.log(swalTrigger(res.data.message, '', res.data.success ? 'success' : 'error'));
+          swalTrigger(res.data.message, ' ', res.data.success ? 'success' : 'error');
+
+          // 要確認所有的 swalModal 都是打開的狀態，如果不 setTimeout，購物車
+        }
+
+        return res;
+      },
+      // Do something with response data
+      (err) => {
+        console.dir('err', err);
+        if (generateLoader) {
+          $loader.hide();
+        }
+        swalTrigger(err.response.data.message, '', err.response.data.success ? 'success' : 'error');
+
+        return Promise.reject(err);
+      },
+    );
+
+    const response = apiInstance[method](`/${path}`, config);
+
     return response;
   }
 
   const getProduct = (page = 1, generateLoader) => taskQueue({
     method: 'get',
-    path: `products?page=${page}`,
+    path: `api/jason/products?page=${page}`,
     generateLoader,
   });
 
   const postCart = (productInfo, generateLoader) => taskQueue({
     method: 'post',
-    path: 'cart',
+    path: 'api/jason/cart',
     config: {
       data: productInfo,
     },
@@ -58,13 +108,13 @@ export default function () {
   });
   const getCart = (generateLoader) => taskQueue({
     method: 'get',
-    path: 'cart',
+    path: 'api/jason/cart',
     generateLoader,
   });
 
   const putCart = (productInfo, generateLoader) => taskQueue({
     method: 'put',
-    path: `cart/${productInfo.id}`,
+    path: `api/jason/cart/${productInfo.id}`,
     config: {
       data: productInfo.config,
     },
@@ -73,17 +123,77 @@ export default function () {
 
   const deleteCart = (id, generateLoader) => taskQueue({
     method: 'delete',
-    path: `cart/${id}`,
+    path: `api/jason/cart/${id}`,
+    generateLoader,
+  });
+
+  const deleteCartAll = (generateLoader) => taskQueue({
+    method: 'delete',
+    path: 'api/jason/carts',
+    generateLoader,
+  });
+
+  const postLogin = (user, generateLoader) => taskQueue({
+    method: 'post',
+    path: 'admin/signin',
+    config: user,
+    generateLoader,
+  });
+  // response  {
+  //     "data": {
+  //         "success": false,
+  //         "message": "登入失敗",
+  //         "error": {
+  //             "code": "auth/invalid-email",
+  //             "message": "The email address is badly formatted."
+  //         }
+  //     }
+  // }
+
+  const postLoginCheck = ({ generateLoader = true, token }) => taskQueue({
+    method: 'post',
+    path: 'api/user/check',
+    generateLoader,
+    Authorization: token,
+  });
+
+  const postOrder = ({ generateLoader = true, orderInfo, message }) => taskQueue({
+    method: 'post',
+    path: 'api/jason/order',
+    config: {
+      data: {
+        user: orderInfo,
+        message,
+      },
+    },
+    generateLoader,
+  });
+
+  const getAdminOrder = ({ page = 1, generateLoader = true }) => taskQueue({
+    method: 'get',
+    path: `api/jason/admin/orders?page=${page}`,
     generateLoader,
   });
 
   return {
     loader,
+
     getProduct,
 
     postCart,
     getCart,
     putCart,
+
     deleteCart,
+
+    postLogin,
+    postLoginCheck,
+
+    postOrder,
+    deleteCartAll,
+
+    getAdminOrder,
+
+    // 解 es-lint Dependency cycle detected import/no-cycle  依賴項錯誤
   };
 }

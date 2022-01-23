@@ -45,6 +45,12 @@
         <span class="cursor-pointer"><i class="bi bi-x-lg"></i></span>
       </td>
     </tr>
+
+    <tr v-if="propShoppingCart.carts.length > 0">
+      <td class="col-md-1 border-0" @click="emitDeleteCartAll()">
+        <button class="btn btn-danger bg-danger" type="button">全部刪除</button>
+      </td>
+    </tr>
   </template>
 
   <template v-else>

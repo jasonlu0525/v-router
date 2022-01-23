@@ -2,7 +2,7 @@
   <div class="container vh-100 d-flex justify-content-center align-items-center" id="app">
     <div class="row justify-content-center w-100">
       <div class="col-md-6 col-lg-3 bg-white rounded p-5 content-box">
-        <form>
+        <form @submit.prevent="login">
           <h1 class="fw-bold mb-3">請先登入</h1>
 
           <div class="form-floating mb-3">
@@ -27,7 +27,7 @@
             <label for="Password">Password</label>
           </div>
 
-          <button type="button" class="btn btn-primary w-100" @click.prevent="login">登入</button>
+          <button type="submit" class="btn btn-primary w-100">登入</button>
         </form>
       </div>
     </div>
@@ -36,16 +36,43 @@
 
 <script>
 import { ref } from 'vue';
-import swal from 'sweetalert';
+import { useRouter } from 'vue-router';
+// import swal from 'sweetalert';
+import commonPackage from '@/components/utils/commonPackage';
 
-console.log(swal);
 export default {
   setup() {
+    const router = useRouter();
+    const { postLogin } = commonPackage();
     const loginData = ref({
       username: '',
       password: '',
     });
-    return { loginData };
+
+    const login = () => {
+      console.log(loginData, loginData.value);
+      postLogin(loginData.value)
+        .then((result) => {
+          console.log('yes', result);
+          const { token, expired } = result.data;
+          //           {
+          //     "success": true,
+          //     "message": "登入成功",
+          //     "uid": ...,
+          //     "expired": ...
+          // }
+          console.log(token);
+
+          document.cookie = `user=${token};expires=${new Date(expired)};path=/`;
+
+          router.replace('dashboard');
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    };
+
+    return { loginData, login };
   },
 };
 </script>
