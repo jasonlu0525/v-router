@@ -42,7 +42,8 @@ export default function () {
       baseURL: apiPath,
     });
     if (Authorization) {
-      apiInstance.defaults.headers.common.Authorization = Authorization;
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)user\s*=\s*([^;]*).*$)|^.*$/, '$1');
+      apiInstance.defaults.headers.common.Authorization = token;
     }
     let $loader;
 
@@ -152,14 +153,14 @@ export default function () {
   //     }
   // }
 
-  const postLoginCheck = ({ generateLoader = true, token }) => taskQueue({
+  const postLoginCheck = ({ generateLoader, Authorization = true }) => taskQueue({
     method: 'post',
     path: 'api/user/check',
     generateLoader,
-    Authorization: token,
+    Authorization,
   });
 
-  const postOrder = ({ generateLoader = true, orderInfo, message }) => taskQueue({
+  const postOrder = ({ generateLoader, orderInfo, message }) => taskQueue({
     method: 'post',
     path: 'api/jason/order',
     config: {
@@ -171,15 +172,25 @@ export default function () {
     generateLoader,
   });
 
-  const getAdminOrder = ({ page = 1, generateLoader = true, token }) => taskQueue({
+  const getAdminOrder = ({ page = 3, generateLoader, Authorization = true }) => taskQueue({
     method: 'get',
     path: `api/jason/admin/orders?page=${page}`,
     generateLoader,
-    // config: {
-    //   headers: {
-    //     Authorization: token,
-    //   },
-    Authorization: token,
+    Authorization,
+  });
+
+  const deleteOrder = ({ id, generateLoader, Authorization = true }) => taskQueue({
+    method: 'delete',
+    path: `api/jason/admin/order/${id}`,
+    generateLoader,
+    Authorization,
+  });
+
+  const deleteOrders = ({ generateLoader, Authorization = true }) => taskQueue({
+    method: 'delete',
+    path: 'api/jason/admin/orders/all',
+    generateLoader,
+    Authorization,
   });
 
   return {
@@ -200,6 +211,9 @@ export default function () {
     deleteCartAll,
 
     getAdminOrder,
+
+    deleteOrder,
+    deleteOrders,
 
     // 解 es-lint Dependency cycle detected import/no-cycle  依賴項錯誤
   };

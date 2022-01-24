@@ -1,7 +1,11 @@
 <template>
-  <router-link to="/dashboard">orders</router-link> |
-  <router-link to="/dashboard/product">product</router-link> |
-  <router-view />
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <router-link to="/dashboard">orders</router-link> |
+      <router-link to="/dashboard/product">product</router-link> |
+    </div>
+    <router-view />
+  </div>
 </template>
 <script>
 // import { ref } from 'vue';
@@ -15,24 +19,15 @@ export default {
     const { postLoginCheck } = commonPackage();
     const router = useRouter();
 
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)user\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    postLoginCheck({})
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        router.push('/login');
+        console.dir(err);
+      });
 
-    console.log(token);
-    // IIFE
-    (() => {
-      postLoginCheck({ token })
-        .then((result) => {
-          // console.log(swal.getState());
-          // if (swal.getState().isOpen) {
-          //   swal.close();
-          // }
-          console.log(result);
-        })
-        .catch((err) => {
-          router.push('/login');
-          console.dir(err);
-        });
-    })(token);
     return {};
   },
 };

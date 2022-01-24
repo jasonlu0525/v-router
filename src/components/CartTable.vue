@@ -47,8 +47,10 @@
     </tr>
 
     <tr v-if="propShoppingCart.carts.length > 0">
-      <td class="col-md-1 border-0" @click="emitDeleteCartAll()">
-        <button class="btn btn-danger bg-danger" type="button">全部刪除</button>
+      <td class="col-md-1 border-0">
+        <button class="btn btn-danger bg-danger" type="button" @click="emitDeleteCartAll()">
+          全部刪除
+        </button>
       </td>
     </tr>
   </template>
