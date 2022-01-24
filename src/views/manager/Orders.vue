@@ -32,8 +32,9 @@ export default {
     const { getAdminOrder } = commonPackage();
 
     const orderData = ref({});
+    //   const token = document.cookie.replace(/(?:(?:^|.*;\s*)user\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
-    getAdminOrder()
+    getAdminOrder({})
       .then((result) => {
         console.log(36, result);
         orderData.value = result.data;

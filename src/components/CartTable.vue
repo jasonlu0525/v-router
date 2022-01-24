@@ -61,5 +61,5 @@
 <script>
 import CartDataModel from '@/components/utils/CartModel';
 
-export default CartDataModel;
+export default { ...CartDataModel };
 </script>

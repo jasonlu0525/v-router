@@ -59,6 +59,7 @@
         <detail-modal ref="detailModalDom" @emit-add-to-cart="addToCart"></detail-modal>
 
         <pagination
+          v-if="productData.products"
           :prop-pagination="productData.pagination"
           @emit-change-page="onChangePage"
         ></pagination>

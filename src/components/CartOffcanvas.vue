@@ -76,7 +76,7 @@
 // import LoginVue from '../views/manager/Login.vue';
 import CartDataModel from '@/components/utils/CartModel';
 
-export default CartDataModel;
+export default { ...CartDataModel };
 
 // export default {
 //   props: ['propShoppingCart'],

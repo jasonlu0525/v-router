@@ -20,6 +20,8 @@ export default function () {
       icon: status,
       buttons: false,
     });
+
+    // 1 秒之後關掉 swal
     setTimeout(() => {
       if (swal.getState().isOpen) {
         swal.close();
@@ -169,10 +171,15 @@ export default function () {
     generateLoader,
   });
 
-  const getAdminOrder = ({ page = 1, generateLoader = true }) => taskQueue({
+  const getAdminOrder = ({ page = 1, generateLoader = true, token }) => taskQueue({
     method: 'get',
     path: `api/jason/admin/orders?page=${page}`,
     generateLoader,
+    // config: {
+    //   headers: {
+    //     Authorization: token,
+    //   },
+    Authorization: token,
   });
 
   return {

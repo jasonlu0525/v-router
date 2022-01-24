@@ -16,6 +16,7 @@ export default {
     const router = useRouter();
 
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)user\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
     console.log(token);
     // IIFE
     (() => {

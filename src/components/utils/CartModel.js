@@ -47,8 +47,6 @@ const CartDataModel = {
           console.log(err);
         });
     };
-
-    // 更新購物車品項數量與總金額
     return {
       changeQty,
       emitDeleteCart,

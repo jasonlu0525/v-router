@@ -15,24 +15,12 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <tr v-is="'cart-table'" :prop-shopping-cart="cartsList"
-              @emit-change-qty="on_changeQty"
-                @emit-delete-cart="on_deleteCart">
-
-              </tr> -->
-
               <CartTables
                 :propShoppingCart="cartData"
                 @emit-delete-cart="refreshCart"
                 @emit-delete-all-cart="refreshCart"
                 @emit-put-cart="refreshCart"
               ></CartTables>
-
-              <!-- <tr v-if="cartData.carts.length > 0">
-                <td class="col-md-1 border-0" @click="emitDeleteCart(item.id)">
-                  <button class="btn btn-danger bg-danger" type="button">全部刪除</button>
-                </td>
-              </tr> -->
             </tbody>
           </table>
         </div>
