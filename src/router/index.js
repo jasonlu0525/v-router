@@ -1,29 +1,41 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import Cart from '@/views/client/Cart.vue';
+import Product from '@/views/client/Product.vue';
+
+import Home from '@/views/client/Home.vue';
+
+import Login from '@/views/manager/Login.vue';
+
+import Dashboard from '@/views/manager/Dashboard.vue';
+
+import Orders from '@/views/manager/Orders.vue';
+
+import managerProduct from '@/views/manager/Product.vue';
 
 const routes = [
   // 前台
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/client/Home.vue'),
+    component: Home,
     children: [
       {
         path: '',
         name: 'product',
 
-        component: () => import('@/views/client/Product.vue'),
+        component: Product,
       },
       {
         path: 'cart',
         name: 'cart',
 
-        component: () => import('@/views/client/Cart.vue'),
+        component: Cart,
       },
 
       {
         path: 'login',
         name: 'login',
-        component: () => import('@/views/manager/Login.vue'),
+        component: Login,
       },
     ],
   },
@@ -32,17 +44,17 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import('@/views/manager/Dashboard.vue'),
+    component: Dashboard,
     children: [
       {
         path: '',
         name: 'orders',
-        component: () => import('@/views/manager/Orders.vue'),
+        component: Orders,
       },
       {
         path: 'product',
-        name: 'dashboard/product',
-        component: () => import('@/views/manager/Product.vue'),
+        name: 'dashboardProduct',
+        component: managerProduct,
       },
     ],
   },

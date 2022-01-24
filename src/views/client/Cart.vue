@@ -21,12 +21,12 @@
 
               </tr> -->
 
-              <CartTable
+              <CartTables
                 :propShoppingCart="cartData"
                 @emit-delete-cart="refreshCart"
                 @emit-delete-all-cart="refreshCart"
                 @emit-put-cart="refreshCart"
-              ></CartTable>
+              ></CartTables>
 
               <!-- <tr v-if="cartData.carts.length > 0">
                 <td class="col-md-1 border-0" @click="emitDeleteCart(item.id)">
@@ -135,11 +135,11 @@
 import { ref } from 'vue';
 // import { Modal } from 'bootstrap';
 import commonPackage from '@/components/utils/commonPackage';
-import CartTable from '@/components/CartTable.vue';
+import CartTables from '@/components/CartTable.vue';
 
 export default {
   components: {
-    CartTable,
+    CartTables,
   },
   setup() {
     const { getCart, postOrder } = commonPackage();
