@@ -1,5 +1,5 @@
 <template v-if="propPagination">
-  <ul class="pagination justify-content-end">
+  <ul class="pagination justify-content-end mb-0">
     <li
       class="page-item"
       :class="{ disabled: !propPagination.has_pre }"

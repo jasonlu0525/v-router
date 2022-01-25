@@ -56,7 +56,10 @@
             </div>
           </li>
         </ul>
-        <detail-modal ref="detailModalDom" @emit-add-to-cart="addToCart"></detail-modal>
+        <detail-product-modal
+          ref="detailModalDom"
+          @emit-add-to-cart="addToCart"
+        ></detail-product-modal>
 
         <pagination
           v-if="productData.products"
@@ -82,14 +85,14 @@ import { Modal } from 'bootstrap';
 import commonPackage from '@/components/utils/commonPackage';
 import pagination from '@/components/Pagination.vue';
 import offfanvasShoppingCart from '@/components/CartOffcanvas.vue';
-import detailModal from '@/components/DetailModal.vue';
+import detailProductModal from '@/components/DetailProductModal.vue';
 
 // axios.delete('https://vue3-course-api.hexschool.io/v2/api/jason/carts');
 
 export default {
   components: {
     pagination,
-    detailModal,
+    detailProductModal,
     offfanvasShoppingCart,
   },
   setup() {
@@ -141,7 +144,7 @@ export default {
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
       // detailModalDom.value.detailModal.show();
       //    console.log(detailModalDom.value);
-      detailModalDom.value.singleProductData = singleProductObj;
+      detailModalDom.value.singleData = singleProductObj;
       console.log(detailModalDom);
     };
 

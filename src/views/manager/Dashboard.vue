@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container py-3">
     <div class="d-flex justify-content-center">
       <router-link to="/dashboard">orders</router-link> |
       <router-link to="/dashboard/product">product</router-link> |

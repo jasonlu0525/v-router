@@ -11,7 +11,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-dark text-white">
-          <h5 class="modal-title">{{ singleProductData.title }}</h5>
+          <h5 class="modal-title">{{ singleData.title }}</h5>
           <button
             type="button"
             class="btn-close bg-white"
@@ -22,17 +22,17 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-lg-6">
-              <img :src="singleProductData.imageUrl" />
+              <img :src="singleData.imageUrl" class="h-100" />
             </div>
             <div class="col-lg-6 d-flex flex-column justify-content-between">
               <div>
                 <span class="badge bg-primary mb-3">
-                  {{ singleProductData.category }}
+                  {{ singleData.category }}
                 </span>
-                <p class="mb-3">{{ singleProductData.description }}</p>
+                <p class="mb-3">{{ singleData.description }}</p>
                 <p>
-                  NT$ {{ singleProductData.price }}
-                  <del>{{ singleProductData.origin_price }}</del>
+                  NT$ {{ singleData.price }}
+                  <del>{{ singleData.origin_price }}</del>
                 </p>
               </div>
 
@@ -42,7 +42,7 @@
                 class="btn btn-primary"
                 @click="
                   $emit('emit-addToCart', {
-                    product_id: singleProductData.id,
+                    product_id: singleData.id,
                     qty: 1,
                   })
                 "
@@ -58,26 +58,9 @@
 </template>
 
 <script>
-// onMounted
-import { ref } from 'vue';
-// import { Modal } from 'bootstrap';
-// ;
+import detailModalModel from '@/components/utils/DetailModalModel';
 
 export default {
-  setup() {
-    const singleProductData = ref({});
-    console.log(singleProductData);
-    // const detailModal = new Modal(document.querySelector('#detailModal'));
-    const detailModal = null;
-    //  const test = ref({});
-    // onMounted(() => {
-    //   detailModal = new Modal(document.querySelector('#detailModal'));
-    // });
-
-    return {
-      singleProductData,
-      detailModal,
-    };
-  },
+  ...detailModalModel,
 };
 </script>

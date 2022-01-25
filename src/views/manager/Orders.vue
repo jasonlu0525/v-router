@@ -34,7 +34,11 @@
             {{ item.is_paid ? '已付款' : '未付款' }}
           </td>
           <td :class="{ 'text-success': item.is_paid, 'text-danger': !item.is_paid }">
-            <button class="btn btn-info d-block w-100 mb-3 text-white" type="button">
+            <button
+              class="btn btn-info d-block w-100 mb-3 text-white"
+              type="button"
+              @click="openDataModal(item)"
+            >
               詳細資訊
             </button>
             <button
@@ -55,67 +59,41 @@
     </tbody>
   </table>
 
-  <button
-    class="btn btn-danger bg-danger"
-    type="button"
-    @click="deleteAllOrders()"
-    :disabled="orderData.hasOwnProperty('orders') && orderData.orders.length === 0"
-  >
-    刪除全部訂單
-    {{
-      orderData.hasOwnProperty('orders') && orderData.orders.length === 0
-        ? '(目前沒有訂單，因此不能刪除訂單 )'
-        : ''
-    }}
-  </button>
+  <div class="d-flex justify-content-between">
+    <button
+      class="btn btn-danger bg-danger"
+      type="button"
+      @click="deleteAllOrders()"
+      :disabled="orderData.hasOwnProperty('orders') && orderData.orders.length === 0"
+    >
+      刪除全部訂單
+      {{
+        orderData.hasOwnProperty('orders') && orderData.orders.length === 0
+          ? '(目前沒有訂單，因此不能刪除訂單 )'
+          : ''
+      }}
+    </button>
+    <pagination
+      v-if="orderData.pagination"
+      :propPagination="orderData.pagination"
+      @emit-change-page="orderChangePage"
+    ></pagination>
+  </div>
+  <detail-order-modal ref="detailModalDom"></detail-order-modal>
 </template>
-
 <script>
 import { ref } from 'vue';
-
+import { Modal } from 'bootstrap';
+import pagination from '@/components/Pagination.vue';
 // import swal from 'sweetalert';
 import commonPackage from '@/components/utils/commonPackage';
-
-// [
-//   {
-//     create_at: 1642951164,
-//     id: '-Mu6WJFgl6i6oFE3wd19',
-//     is_paid: false,
-//     message: '1',
-//     products: {
-//       '-Mu6WJH1cncCs3vB1b71': {
-//         final_total: 8888888,
-//         id: '-Mu6WJH1cncCs3vB1b71',
-//         product: {
-//           category: '888888',
-//           content: '',
-//           description: '',
-//           id: '-MtcsQnnrgA63Sp2ZvQu',
-//           imageUrl: '',
-//           is_enabled: 1,
-//           num: 2,
-//           origin_price: 88888888,
-//           price: 8888888,
-//           title: '88886',
-//           unit: '88888',
-//         },
-//         product_id: '-MtcsQnnrgA63Sp2ZvQu',
-//         qty: 1,
-//         total: 8888888,
-//       },
-//     },
-//     total: 8888888,
-//     user: {
-//       address: 'q',
-//       email: 's099113302@gmail.com',
-//       name: '1',
-//       tel: '0912345678',
-//     },
-//     num: 1,
-//   },
-// ];
+import detailOrderModal from '@/components/DetailOrderModal.vue';
 
 export default {
+  components: {
+    pagination,
+    detailOrderModal,
+  },
   setup() {
     const { getAdminOrder, deleteOrder, deleteOrders } = commonPackage();
 
@@ -123,7 +101,6 @@ export default {
 
     getAdminOrder({})
       .then((result) => {
-        console.log(36, result);
         orderData.value = result.data;
 
         console.log(orderData.value);
@@ -135,7 +112,29 @@ export default {
     const deleteSingleOrder = (deleteMessage) => {
       deleteOrder({ id: deleteMessage.id })
         .then(() => {
+          // 在 request 前先處理畫面
           orderData.value.orders.splice(deleteMessage.index, 1);
+
+          getAdminOrder({ generateLoader: false })
+            .then((result) => {
+              orderData.value = result.data;
+
+              console.log(orderData.value);
+            })
+            .catch((err) => {
+              console.dir(err);
+            });
+
+          //   // 刪掉之後調整 pagination 的頁數，如果 orders 頁面少於 10 比資料
+          //   if (orderData.value.orders.length < 10) {
+          //     orderData.value.pagination.total_pages -= 1;
+          //   }
+
+          //   if (orderData.value.pagination.total_pages ===
+          // orderData.value.pagination.current_page) {
+          //     orderData.value.pagination.has_next = false;
+          //   }
+          //
         })
         .catch(() => {});
     };
@@ -152,11 +151,38 @@ export default {
         .catch(() => {});
     };
 
+    const orderChangePage = (page) => {
+      getAdminOrder({ page })
+        .then((result) => {
+          console.log(36, result);
+          orderData.value = result.data;
+
+          console.log(orderData.value);
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    };
+
+    const detailModalDom = ref(null);
+
+    const openDataModal = (singleOrderObj) => {
+      detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
+
+      detailModalDom.value.singleData = singleOrderObj;
+      console.log(detailModalDom.value.singleData);
+      console.log(detailModalDom.value);
+    };
+
     return {
       orderData,
       deleteSingleOrder,
       deleteOrders,
       deleteAllOrders,
+      orderChangePage,
+
+      detailModalDom,
+      openDataModal,
     };
   },
 };

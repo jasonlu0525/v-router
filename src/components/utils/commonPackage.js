@@ -172,7 +172,7 @@ export default function () {
     generateLoader,
   });
 
-  const getAdminOrder = ({ page = 3, generateLoader, Authorization = true }) => taskQueue({
+  const getAdminOrder = ({ page = 1, generateLoader, Authorization = true }) => taskQueue({
     method: 'get',
     path: `api/jason/admin/orders?page=${page}`,
     generateLoader,
