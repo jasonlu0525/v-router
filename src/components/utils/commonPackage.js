@@ -153,6 +153,8 @@ export default function () {
   //     }
   // }
 
+  /* 標單驗證 API */
+
   const postLoginCheck = ({ generateLoader, Authorization = true }) => taskQueue({
     method: 'post',
     path: 'api/user/check',
@@ -172,6 +174,7 @@ export default function () {
     generateLoader,
   });
 
+  /* 後台 API */
   const getAdminOrder = ({ page = 1, generateLoader, Authorization = true }) => taskQueue({
     method: 'get',
     path: `api/jason/admin/orders?page=${page}`,
@@ -190,6 +193,18 @@ export default function () {
     method: 'delete',
     path: 'api/jason/admin/orders/all',
     generateLoader,
+    Authorization,
+  });
+
+  const putOrder = ({
+    id, generateLoader, Authorization = true, config,
+  }) => taskQueue({
+    method: 'put',
+    path: `api/jason/admin/order/${id}`,
+    generateLoader,
+    config: {
+      data: config,
+    },
     Authorization,
   });
 
@@ -214,7 +229,7 @@ export default function () {
 
     deleteOrder,
     deleteOrders,
-
+    putOrder,
     // 解 es-lint Dependency cycle detected import/no-cycle  依賴項錯誤
   };
 }

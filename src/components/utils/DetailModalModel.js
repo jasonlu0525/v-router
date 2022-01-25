@@ -10,9 +10,21 @@ export default {
     //   detailModal = new Modal(document.querySelector('#detailModal'));
     // });
 
+    const editor = ref({
+      canEdit: false,
+      temp: {},
+    });
+
+    const isPhone = (value) => {
+      const phoneNumber = /^(09)[0-9]{8}$/;
+      return phoneNumber.test(value) ? true : '需要正確的電話號碼';
+    };
+
     return {
       singleData,
       detailModal,
+      editor,
+      isPhone,
     };
   },
 };

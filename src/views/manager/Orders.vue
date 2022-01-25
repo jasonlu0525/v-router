@@ -37,7 +37,7 @@
             <button
               class="btn btn-info d-block w-100 mb-3 text-white"
               type="button"
-              @click="openDataModal(item)"
+              @click="openDataModal({ item, index })"
             >
               詳細資訊
             </button>
@@ -79,7 +79,7 @@
       @emit-change-page="orderChangePage"
     ></pagination>
   </div>
-  <detail-order-modal ref="detailModalDom"></detail-order-modal>
+  <detail-order-modal ref="detailModalDom" @emit-update-order="updateOrder"></detail-order-modal>
 </template>
 <script>
 import { ref } from 'vue';
@@ -95,7 +95,9 @@ export default {
     detailOrderModal,
   },
   setup() {
-    const { getAdminOrder, deleteOrder, deleteOrders } = commonPackage();
+    const {
+      getAdminOrder, deleteOrder, deleteOrders, putOrder,
+    } = commonPackage();
 
     const orderData = ref({});
 
@@ -115,35 +117,20 @@ export default {
           // 在 request 前先處理畫面
           orderData.value.orders.splice(deleteMessage.index, 1);
 
-          getAdminOrder({ generateLoader: false })
-            .then((result) => {
-              orderData.value = result.data;
-
-              console.log(orderData.value);
-            })
-            .catch((err) => {
-              console.dir(err);
-            });
-
-          //   // 刪掉之後調整 pagination 的頁數，如果 orders 頁面少於 10 比資料
-          //   if (orderData.value.orders.length < 10) {
-          //     orderData.value.pagination.total_pages -= 1;
-          //   }
-
-          //   if (orderData.value.pagination.total_pages ===
-          // orderData.value.pagination.current_page) {
-          //     orderData.value.pagination.has_next = false;
-          //   }
-          //
+          return getAdminOrder({ generateLoader: false });
         })
-        .catch(() => {});
+        .catch(() => {})
+        .then((result) => {
+          orderData.value = result.data;
+
+          console.log(orderData.value);
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
     };
 
     const deleteAllOrders = () => {
-      // if (orderData.value.orders.length === 0) {
-      //   return;
-      // }
-
       deleteOrders({})
         .then(() => {
           orderData.value.orders = [];
@@ -154,7 +141,6 @@ export default {
     const orderChangePage = (page) => {
       getAdminOrder({ page })
         .then((result) => {
-          console.log(36, result);
           orderData.value = result.data;
 
           console.log(orderData.value);
@@ -166,12 +152,26 @@ export default {
 
     const detailModalDom = ref(null);
 
-    const openDataModal = (singleOrderObj) => {
+    const openDataModal = ({ item, index }) => {
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
+      detailModalDom.value.singleData = item;
+      detailModalDom.value.editor.index = index;
+    };
 
-      detailModalDom.value.singleData = singleOrderObj;
-      console.log(detailModalDom.value.singleData);
-      console.log(detailModalDom.value);
+    const updateOrder = ({ id, config, index }) => {
+      putOrder({ id, config })
+        .then(() => getAdminOrder({ generateLoader: false }))
+        .catch((err) => {
+          console.dir(err);
+        })
+        .then((result) => {
+          orderData.value = result.data;
+          detailModalDom.value.singleData = orderData.value.orders[index];
+          detailModalDom.value.editor.canEdit = false;
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
     };
 
     return {
@@ -183,6 +183,8 @@ export default {
 
       detailModalDom,
       openDataModal,
+
+      updateOrder,
     };
   },
 };
