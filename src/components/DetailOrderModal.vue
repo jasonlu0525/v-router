@@ -22,15 +22,7 @@
         </div>
 
         <div class="modal-body" v-if="singleData.user">
-          <h3 class="text-center bg-dark text-white py-3">顧客資料</h3>
-          <button
-            class="btn btn-primary d-block ms-auto"
-            type="button"
-            @click="(editor.canEdit = true), (editor.temp = JSON.parse(JSON.stringify(singleData)))"
-            :disabled="editor.canEdit === true"
-          >
-            編輯
-          </button>
+          <h3 class="text-center bg-dark text-white py-3 mb-3">顧客資料</h3>
 
           <template v-if="editor.canEdit">
             <Form v-slot="{ errors }" class="mb-3">
@@ -209,8 +201,17 @@
             </section>
           </template>
 
+          <button
+            class="btn btn-primary d-block ms-auto mb-3"
+            type="button"
+            @click="(editor.canEdit = true), (editor.temp = JSON.parse(JSON.stringify(singleData)))"
+            v-if="editor.canEdit === false"
+          >
+            編輯
+          </button>
+
           <section>
-            <h3 class="text-center bg-dark text-white py-3">訂單資料</h3>
+            <h3 class="text-center bg-dark text-white py-3 mb-3">訂單資料</h3>
           </section>
         </div>
       </div>
@@ -224,25 +225,4 @@ import detailModalModel from '@/components/utils/DetailModalModel';
 export default {
   ...detailModalModel,
 };
-
-/*
-export default {
-  setup() {
-    const singletData = ref({});
-    console.log(singletData);
-    // const detailModal = new Modal(document.querySelector('#detailModal'));
-    const detailModal = null;
-    //  const test = ref({});
-    // onMounted(() => {
-    //   detailModal = new Modal(document.querySelector('#detailModal'));
-    // });
-
-    return {
-      singleProductData,
-      detailModal,
-    };
-  },
-};
-
- */
 </script>
