@@ -119,8 +119,8 @@
                     $emit('emit-update-order', {
                       id: editor.temp.id,
                       config: editor.temp,
-
                       index: editor.index,
+                      $currentPage: editor.currentPage,
                     })
                   "
                 >

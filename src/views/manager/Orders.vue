@@ -85,7 +85,6 @@
 import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 import pagination from '@/components/Pagination.vue';
-// import swal from 'sweetalert';
 import commonPackage from '@/components/utils/commonPackage';
 import detailOrderModal from '@/components/DetailOrderModal.vue';
 
@@ -100,7 +99,7 @@ export default {
     } = commonPackage();
 
     const orderData = ref({});
-
+    const detailModalDom = ref(null);
     getAdminOrder({})
       .then((result) => {
         orderData.value = result.data;
@@ -114,7 +113,7 @@ export default {
     const deleteSingleOrder = (deleteMessage) => {
       deleteOrder({ id: deleteMessage.id })
         .then(() => {
-          // 在 request 前先處理畫面
+          // 在 request 前先處理畫面，把產品刪掉
           orderData.value.orders.splice(deleteMessage.index, 1);
 
           return getAdminOrder({ generateLoader: false });
@@ -122,8 +121,6 @@ export default {
         .catch(() => {})
         .then((result) => {
           orderData.value = result.data;
-
-          console.log(orderData.value);
         })
         .catch((err) => {
           console.dir(err);
@@ -133,7 +130,7 @@ export default {
     const deleteAllOrders = () => {
       deleteOrders({})
         .then(() => {
-          orderData.value.orders = [];
+          orderData.value.orders = []; // 直接將 orders 清空，減少一次 GET 請求
         })
         .catch(() => {});
     };
@@ -143,31 +140,38 @@ export default {
         .then((result) => {
           orderData.value = result.data;
 
-          console.log(orderData.value);
+          detailModalDom.value.editor.currentPage = page; // 把現在的頁碼 傳送給 modal ， 讓訂單更新之後請求該訂單所在的頁碼
         })
         .catch((err) => {
           console.dir(err);
         });
     };
 
-    const detailModalDom = ref(null);
-
     const openDataModal = ({ item, index }) => {
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
-      detailModalDom.value.singleData = item;
+      detailModalDom.value.singleData = item; // 把訂單的資料傳入 modal
+
       detailModalDom.value.editor.index = index;
+      // 把要訂單的 index 索引， 傳入 modal 元件 ， 用於將更新後的資料 寫回 modal 的資料
     };
 
-    const updateOrder = ({ id, config, index }) => {
+    const updateOrder = ({
+      id, // 訂單 id
+      config, // 帶上的參數
+      index, // 該筆訂單在陣列中的位置
+      $currentPage, // 該筆訂單在第幾頁
+    }) => {
       putOrder({ id, config })
-        .then(() => getAdminOrder({ generateLoader: false }))
+        .then(() => getAdminOrder({ generateLoader: false, page: $currentPage }))
         .catch((err) => {
           console.dir(err);
         })
         .then((result) => {
           orderData.value = result.data;
-          detailModalDom.value.singleData = orderData.value.orders[index];
+
           detailModalDom.value.editor.canEdit = false;
+          detailModalDom.value.singleData = orderData.value.orders[index];
+          // 將更新後的資料 寫回 modal  ( 使用 orderChangePage() 寫入的 index  )
         })
         .catch((err) => {
           console.dir(err);

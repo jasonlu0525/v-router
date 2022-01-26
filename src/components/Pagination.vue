@@ -44,8 +44,6 @@
 </template>
 
 <script>
-// inject
-
 export default {
   props: ['propPagination'],
   setup(props, { emit }) {
