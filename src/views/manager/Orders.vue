@@ -147,11 +147,11 @@ export default {
         });
     };
 
-    const openDataModal = ({ item, index }) => {
+    const openDataModal = ({ item }) => {
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
       detailModalDom.value.singleData = item; // 把訂單的資料傳入 modal
 
-      detailModalDom.value.editor.index = index;
+      // detailModalDom.value.editor.index = index;
       // 把要訂單的 index 索引， 傳入 modal 元件 ， 用於將更新後的資料 寫回 modal 的資料
     };
 
@@ -161,7 +161,7 @@ export default {
       index, // 該筆訂單在陣列中的位置
       $currentPage, // 該筆訂單在第幾頁
     }) => {
-      putOrder({ id, config })
+      putOrder({ id, config, index })
         .then(() => getAdminOrder({ generateLoader: false, page: $currentPage }))
         .catch((err) => {
           console.dir(err);

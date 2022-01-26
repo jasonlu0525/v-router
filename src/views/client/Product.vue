@@ -143,7 +143,7 @@ export default {
       console.log(singleProductObj);
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
       // detailModalDom.value.detailModal.show();
-      //    console.log(detailModalDom.value);
+      console.log(detailModalDom);
       detailModalDom.value.singleData = singleProductObj;
       console.log(detailModalDom);
     };
