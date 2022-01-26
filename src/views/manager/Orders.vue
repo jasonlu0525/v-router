@@ -82,7 +82,7 @@
   <detail-order-modal ref="detailModalDom" @emit-update-order="updateOrder"></detail-order-modal>
 </template>
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 import pagination from '@/components/Pagination.vue';
 import commonPackage from '@/components/utils/commonPackage';
@@ -100,6 +100,10 @@ export default {
 
     const orderData = ref({});
     const detailModalDom = ref(null);
+
+    onMounted(() => {
+      console.log(detailModalDom);
+    });
     getAdminOrder({})
       .then((result) => {
         orderData.value = result.data;

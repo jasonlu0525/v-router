@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="deleteModal"
     id="delProductModal"
     class="modal fade"
     tabindex="-1"
@@ -44,17 +45,23 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 
 export default {
   setup() {
     const delteParameter = ref({});
+
+    const deleteModal = ref(null);
+
+    onMounted(() => {
+      console.log(deleteModal);
+    });
     const genertaeModal = (para) => {
       new Modal(document.querySelector('#delProductModal')).show();
       delteParameter.value = para;
     };
-    return { delteParameter, genertaeModal };
+    return { delteParameter, genertaeModal, deleteModal };
   },
 };
 </script>

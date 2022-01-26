@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   setup() {
@@ -9,6 +9,12 @@ export default {
     // onMounted(() => {
     //   detailModal = new Modal(document.querySelector('#detailModal'));
     // });
+
+    const test = ref(null);
+
+    onMounted(() => {
+      console.log(test);
+    });
 
     const editor = ref({
       canEdit: false, // true ==> 切換成 可以修改的表單 false ==> 顯示不包含驗證功能 readonly 的 表班
@@ -26,6 +32,7 @@ export default {
       detailModal,
       editor,
       isPhone,
+      test,
     };
   },
 };

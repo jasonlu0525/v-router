@@ -41,12 +41,12 @@
     :propPagination="adminProductsData.pagination"
     @emit-change-page="productChangePage"
   ></pagination>
-  <deleteModal ref="deleteModalDom" @emit-delete-order="deleteSingleProduct"></deleteModal>
+  <delete-modal ref="deleteModalDom" @emit-delete-order="deleteSingleProduct"></delete-modal>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import { Modal } from 'bootstrap';
+import { ref, onMounted, onUpdated } from 'vue';
+// import { Modal } from 'bootstrap';
 import pagination from '@/components/Pagination.vue';
 import deleteModal from '@/components/DeleteModal.vue';
 import commonPackage from '@/components/utils/commonPackage';
@@ -102,22 +102,32 @@ export default {
     const generateModal = (delteParameter) => {
       //
       // deleteModalDom.value.delteParameter.genertaeModal(delteParameter);
-      const test = new Modal(deleteModalDom.value);
-      deleteModalDom.value.delteParameter = delteParameter;
-
+      // deleteModalDom.value.delteParameter = delteParameter;
       console.log(deleteModalDom, delteParameter);
-      test.show();
+      // const modal = new Modal(deleteModalDom.value);
+      // console.log(modal);
+      // modal.show();
     };
     onMounted(() => {
       console.log(deleteModalDom);
+
       // deleteModalDom.value.a = new Modal(document.querySelector('#delProductModal')).show();
     });
+
+    onUpdated(() => {
+      console.log(deleteModalDom);
+    });
+
+    setTimeout(() => {
+      console.log(deleteModalDom);
+    }, 1000);
 
     return {
       adminProductsData,
       productChangePage,
       deleteSingleProduct,
       generateModal,
+      deleteModalDom,
     };
   },
 };

@@ -7,6 +7,7 @@
     tabindex="-1"
     aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true"
+    ref="test"
   >
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
