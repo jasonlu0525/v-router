@@ -272,7 +272,7 @@ export default {
       copiedData: {
         id: '',
       },
-      id: '',
+      id: ''
       page: 1,
     });
 
