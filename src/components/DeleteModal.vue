@@ -35,8 +35,6 @@
             @click="$emit('emit-delete-order', delteParameter)"
           >
             確認刪除
-
-            {{ delteParameter }}
           </button>
         </div>
       </div>
@@ -45,21 +43,19 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 
 export default {
   setup() {
     const delteParameter = ref({});
 
-    const deleteModal = ref(null);
+    const deleteModal = ref(null); // Modal Dom
 
-    onMounted(() => {
-      console.log(deleteModal);
-    });
     const genertaeModal = (para) => {
-      new Modal(document.querySelector('#delProductModal')).show();
+      new Modal(deleteModal.value).show();
       delteParameter.value = para;
+      console.log(para);
     };
     return { delteParameter, genertaeModal, deleteModal };
   },

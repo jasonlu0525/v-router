@@ -217,7 +217,14 @@ export default function () {
 
   const deleteAdminProduct = ({ id, generateLoader, Authorization = true }) => taskQueue({
     method: 'delete',
-    path: `api/jason/admin/products/${id}`,
+    path: `api/jason/admin/product/${id}`,
+    generateLoader,
+    Authorization,
+  });
+
+  const putAdminProduct = ({ id, generateLoader, Authorization = true }) => taskQueue({
+    method: 'put',
+    path: `api/jason/admin/product/${id}`,
     generateLoader,
     Authorization,
   });
@@ -247,6 +254,8 @@ export default function () {
 
     getAdminProducts,
     deleteAdminProduct,
+
+    putAdminProduct,
     // 解 es-lint Dependency cycle detected import/no-cycle  依賴項錯誤
   };
 }

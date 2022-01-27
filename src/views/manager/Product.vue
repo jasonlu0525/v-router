@@ -1,4 +1,18 @@
 <template>
+  <div class="text-end my-4">
+    <button
+      class="btn btn-primary"
+      @click="
+        generateModal({
+          targetModal: adjustProdutModalDom,
+          page,
+          action: 'post',
+        })
+      "
+    >
+      建立新的產品
+    </button>
+  </div>
   <table class="table table-hbver">
     <thead>
       <tr>
@@ -21,11 +35,26 @@
         </td>
         <td>
           <div class="btn-group">
-            <button type="button" class="btn btn-outline-primary btn-sm">編輯</button
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm"
+              @click="
+                generateModal({
+                  targetModal: adjustProdutModalDom,
+                  id: item.id,
+                  page,
+                  coipedData: JSON.parse(JSON.stringify(item)),
+                  action: 'put',
+                })
+              "
+            >
+              編輯</button
             ><button
               type="button"
               class="btn btn-outline-danger btn-sm"
-              @click="generateModal({ id: item.id, page: item.num - 1 })"
+              @click="
+                generateModal({ targetModal: deleteModalDom, id: item.id, page, action: 'delete' })
+              "
             >
               刪除
             </button>
@@ -42,25 +71,28 @@
     @emit-change-page="productChangePage"
   ></pagination>
   <delete-modal ref="deleteModalDom" @emit-delete-order="deleteSingleProduct"></delete-modal>
+  <adjust-produt-modal ref="adjustProdutModalDom"></adjust-produt-modal>
 </template>
 
 <script>
-import { ref, onMounted, onUpdated } from 'vue';
-// import { Modal } from 'bootstrap';
+import { ref } from 'vue';
+
 import pagination from '@/components/Pagination.vue';
 import deleteModal from '@/components/DeleteModal.vue';
+import adjustProdutModal from '@/components/AdjustProductModal.vue';
 import commonPackage from '@/components/utils/commonPackage';
-// import detailOrderModal from '@/components/DetailOrderModal.vue';
 
 export default {
   components: {
     pagination,
     deleteModal,
+    adjustProdutModal,
   },
   setup() {
-    const adminProductsData = ref({});
-    const deleteModalDom = ref(null);
     const { getAdminProducts, deleteAdminProduct } = commonPackage();
+    const adminProductsData = ref({});
+    const deleteModalDom = ref(null); // 元件
+    const adjustProdutModalDom = ref(null);
 
     getAdminProducts({})
       .then((result) => {
@@ -82,10 +114,7 @@ export default {
         });
     };
 
-    const deleteSingleProduct = ({
-      id,
-      page = adminProductsData.value.pagination.current_page,
-    }) => {
+    const deleteSingleProduct = ({ id, page }) => {
       deleteAdminProduct({ id })
         .then(() => getAdminProducts({ page }))
         .catch((err) => {
@@ -99,28 +128,21 @@ export default {
         });
     };
 
-    const generateModal = (delteParameter) => {
-      //
-      // deleteModalDom.value.delteParameter.genertaeModal(delteParameter);
-      // deleteModalDom.value.delteParameter = delteParameter;
-      console.log(deleteModalDom, delteParameter);
-      // const modal = new Modal(deleteModalDom.value);
-      // console.log(modal);
-      // modal.show();
+    const generateModal = ({
+      targetModal, // 要打開的 modal 元件
+      id, // 編輯功能會用到 id
+      page = adminProductsData.value.pagination.current_page, // 打開 modal 時在第幾頁，必填
+      coipedData = {}, // 複製的資料 | 新增功能預設帶入空物件
+      action = 'put', // 請求方法 ，必填
+    }) => {
+      //  targetModal 已
+      targetModal.genertaeModal({
+        id,
+        page,
+        coipedData,
+        action,
+      });
     };
-    onMounted(() => {
-      console.log(deleteModalDom);
-
-      // deleteModalDom.value.a = new Modal(document.querySelector('#delProductModal')).show();
-    });
-
-    onUpdated(() => {
-      console.log(deleteModalDom);
-    });
-
-    setTimeout(() => {
-      console.log(deleteModalDom);
-    }, 1000);
 
     return {
       adminProductsData,
@@ -128,6 +150,7 @@ export default {
       deleteSingleProduct,
       generateModal,
       deleteModalDom,
+      adjustProdutModalDom,
     };
   },
 };
