@@ -22,7 +22,11 @@
           ></button>
         </div>
         <div class="modal-body" v-if="adjustProductModalData.copiedData">
-          <Form v-slot="{ errors }" @submit="onSubmit">
+          <Form
+            v-slot="{ errors }"
+            @submit="onSubmit"
+            :initial-values="adjustProductModalData.copiedData"
+          >
             <div class="row">
               <div class="col-sm-4">
                 <div class="mb-1">
