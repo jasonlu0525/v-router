@@ -290,6 +290,7 @@ export default {
 
       adjustProductModalData.value.copiedData = coipedData;
 
+      delete adjustProductModalData.value.copiedData.id;
       // 新增功能、編輯沒有多圖的產品 會預先在 copiedData 物件內加上空的 imagesUrl 陣列
       if (!adjustProductModalData.value.copiedData.imagesUrl) {
         adjustProductModalData.value.copiedData.imagesUrl = [];
