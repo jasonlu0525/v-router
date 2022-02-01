@@ -71,7 +71,11 @@
     @emit-change-page="productChangePage"
   ></pagination>
   <delete-modal ref="deleteModalDom" @emit-delete-order="deleteSingleProduct"></delete-modal>
-  <adjust-produt-modal ref="adjustProdutModalDom"></adjust-produt-modal>
+  <adjust-produt-modal
+    ref="adjustProdutModalDom"
+    @emit-add-newProduct="onAddNewProduct"
+    @emit-edit-product="onEditProduct"
+  ></adjust-produt-modal>
 </template>
 
 <script>
@@ -89,7 +93,10 @@ export default {
     adjustProdutModal,
   },
   setup() {
-    const { getAdminProducts, deleteAdminProduct } = commonPackage();
+    //
+    const {
+      getAdminProducts, deleteAdminProduct, putAdminProduct, postAdminProduct,
+    } = commonPackage();
     const adminProductsData = ref({});
     const deleteModalDom = ref(null); // 元件
     const adjustProdutModalDom = ref(null);
@@ -144,6 +151,35 @@ export default {
       });
     };
 
+    const onAddNewProduct = (modalData) => {
+      console.log(modalData);
+      console.log(modalData.copiedData.value);
+      console.log({ data: modalData.copiedData });
+      postAdminProduct({ config: modalData.copiedData })
+        .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
+        .catch((err) => console.dir(err))
+        .then((result) => {
+          adminProductsData.value = result.data;
+        });
+    };
+    const onEditProduct = (modalData) => {
+      // {
+      //       // modal 要用到的資料
+      //       action: '',
+
+      //       copiedData: {},
+      //       id: '',
+      //       page: 1,
+      //     }
+      console.log(modalData);
+      putAdminProduct({ id: modalData.id, config: modalData.coipedData })
+        .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
+
+        .then((result) => {
+          adminProductsData.value = result.data;
+        });
+    };
+
     return {
       adminProductsData,
       productChangePage,
@@ -151,6 +187,8 @@ export default {
       generateModal,
       deleteModalDom,
       adjustProdutModalDom,
+      onAddNewProduct,
+      onEditProduct,
     };
   },
 };

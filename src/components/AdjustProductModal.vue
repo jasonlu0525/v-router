@@ -8,7 +8,7 @@
     aria-labelledby="productModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 id="productModalLabel" class="modal-title">
@@ -21,200 +21,192 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body" v-if="adjustProductModalData.copiedData">
-          <Form
-            v-slot="{ errors }"
-            @submit="onSubmit"
-            :initial-values="adjustProductModalData.copiedData"
-          >
+        <div class="modal-body">
+          <form @submit.prevent="onSubmit(adjustProductModalData)">
             <div class="row">
               <div class="col-sm-4">
-                <div class="mb-1">
+                <div class="mb-5">
                   <div class="form-group">
-                    <label for="imageUrl-main">新增主圖網址</label>
-                    <field
-                      id="imageUrl-main"
-                      type="text"
-                      class="form-control"
-                      placeholder="請輸入主圖連結"
-                      v-model="adjustProductModalData.copiedData.email"
-                      :class="{ 'is-invalid': errors['主圖網址'] }"
-                      rules="required"
-                      name="主圖網址"
-                    >
-                    </field>
-                    <error-message name="主圖網址" class="invalid-feedback"></error-message>
-                    <img class="img-fluid" alt="" />
-                  </div>
-                </div>
-                <div>
-                  <button type="button" class="btn btn-outline-primary btn-sm d-block w-100">
-                    新增圖片
-                  </button>
-                </div>
-                <div class="mb-3">
-                  <button type="button" class="btn btn-outline-danger btn-sm d-block w-100">
-                    刪除圖片
-                  </button>
-                </div>
+                    <label for="imageUrl-main" class="mb-3">新增主圖網址</label>
 
-                <div class="mb-1">
-                  <div class="form-group">
-                    <label for="imageUrl-sub">新增副圖網址</label>
-                    <input
-                      id="imageUrl-sub"
-                      type="text"
-                      class="form-control"
-                      placeholder="請輸入副圖連結"
+                    <div class="input-group mb-3">
+                      <input
+                        id="imageUrl-main"
+                        type="text"
+                        class="form-control"
+                        placeholder="請輸入主圖連結"
+                        v-model="adjustProductModalData.copiedData.imageUrl"
+                        name="主圖網址"
+                        required
+                      />
+                      <button
+                        class="btn btn-outline-danger"
+                        type="button"
+                        @click="adjustProductModalData.copiedData.imageUrl = ''"
+                      >
+                        清除
+                      </button>
+                    </div>
+
+                    <img
+                      class="img-fluid"
+                      :src="adjustProductModalData.copiedData.imageUrl"
+                      alt=""
                     />
                   </div>
-                  <img class="img-fluid" alt="" />
                 </div>
-                <div>
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-sm d-block w-100"
-                    @click="addSubImg"
-                  >
-                    新增圖片
-                  </button>
-                </div>
-                <div>
-                  <ol class="overflow-auto">
-                    <!-- <li
-                    v-for="(item, index) in subProductUrl.collection"
-                    :key="index"
-                    @click="selectSubImage(item)"
-                  >
-                    {{ item }}
-                  </li> -->
-                  </ol>
 
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger btn-sm d-block w-100"
-                    @click="removeSubImg"
+                <label
+                  v-if="
+                    !adjustProductModalData.copiedData.imagesUrl ||
+                    adjustProductModalData.copiedData.imagesUrl.length === 0
+                  "
+                  class="mb-3"
+                  >新增副圖網址</label
+                >
+                <label
+                  v-else
+                  :for="
+                    adjustProductModalData.copiedData.imagesUrl[
+                      adjustProductModalData.copiedData.imagesUrl.length - 1
+                    ] +
+                    (adjustProductModalData.copiedData.imagesUrl.length - 1)
+                  "
+                  class="mb-3"
+                  >新增副圖網址</label
+                >
+
+                <div class="mb-1">
+                  <template
+                    v-for="(item, index) in adjustProductModalData.copiedData.imagesUrl"
+                    :key="item + index"
                   >
-                    刪除圖片
-                  </button>
+                    <div class="form-group mb-3">
+                      <div class="input-group mb-3">
+                        <input
+                          :id="item + index"
+                          type="text"
+                          class="form-control"
+                          placeholder="請輸入副圖連結"
+                          required
+                          v-model="adjustProductModalData.copiedData.imagesUrl[index]"
+                        />
+                        <button
+                          class="btn btn-outline-danger"
+                          type="button"
+                          id="button-addon2"
+                          @click="adjustProductModalData.copiedData.imagesUrl.splice(index, 1)"
+                        >
+                          刪除
+                        </button>
+                      </div>
+                      <img class="img-fluid" :src="item" alt="" />
+                    </div>
+                  </template>
                 </div>
+
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm d-block w-100"
+                  @click="adjustProductModalData.copiedData.imagesUrl.push('')"
+                >
+                  新增圖片
+                </button>
               </div>
               <div class="col-sm-8">
                 <div class="form-group">
                   <label for="title">標題</label>
-                  <field
+                  <input
                     id="title"
                     type="text"
                     class="form-control"
                     placeholder="請輸入標題"
                     v-model="adjustProductModalData.copiedData.title"
-                    :class="{
-                      'is-invalid': errors['標題'],
-                    }"
-                    rules="required"
                     name="標題"
-                  ></field>
-                  <error-message class="invalid-feedback" name="標題"> </error-message>
-
+                    required
+                  />
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label for="category">分類</label>
-                      <field
+                      <input
                         id="category"
                         type="text"
                         class="form-control"
                         placeholder="請輸入分類"
                         v-model="adjustProductModalData.copiedData.category"
-                        :class="{ 'is-invalid': errors['分類'] }"
-                        rules="required"
                         name="分類"
-                      ></field>
-                      <error-message class="invalid-feedback" name="分類"> </error-message>
+                        required
+                      />
                     </div>
                     <div class="form-group col-md-6">
                       <label for="unit">單位</label>
-                      <field
+                      <input
                         id="unit"
                         type="text"
                         class="form-control"
                         placeholder="請輸入單位"
                         v-model="adjustProductModalData.copiedData.unit"
-                        :class="{ 'is-invalid': errors['單位'] }"
-                        rules="required"
                         name="單位"
-                      ></field>
-                      <error-message class="invalid-feedback" name="單位"> </error-message>
+                        required
+                      />
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label for="origin_price">原價</label>
-                      <field
+                      <input
                         id="origin_price"
                         type="number"
                         min="0"
                         class="form-control"
                         placeholder="請輸入原價"
-                        v-model="adjustProductModalData.copiedData.origin_price"
-                        :class="{
-                          'is-invalid':
-                            errors['原價'] && !adjustProductModalData.copiedData.origin_price,
-                        }"
-                        rules="required"
+                        v-model.number="adjustProductModalData.copiedData.origin_price"
                         name="原價"
-                      ></field>
-                      <error-message class="invalid-feedback" name="原價"> </error-message>
+                        required
+                      />
                     </div>
                     <div class="form-group col-md-6">
                       <label for="price">售價</label>
-                      <field
+                      <input
                         id="price"
                         type="number"
                         min="0"
                         class="form-control"
                         placeholder="請輸入售價"
-                        v-model="adjustProductModalData.copiedData.price"
-                        :class="{ 'is-invalid': errors['售價'] }"
-                        rules="required"
+                        v-model.number="adjustProductModalData.copiedData.price"
                         name="售價"
-                      ></field>
-                      <error-message class="invalid-feedback" name="售價"> </error-message>
+                        required
+                      />
                     </div>
                   </div>
                   <hr />
 
                   <div class="form-group">
                     <label for="description">產品描述</label>
-                    <field
+                    <textarea
                       id="description"
                       type="text"
                       class="form-control"
                       placeholder="請輸入產品描述"
                       v-model="adjustProductModalData.copiedData.description"
-                      :class="{ 'is-invalid': errors['產品描述'] }"
-                      rules="required"
-                      as="textarea"
                       name="產品描述"
+                      required
                     >
-                    </field>
-                    <error-message class="invalid-feedback" name="產品描述"> </error-message>
+                    </textarea>
                   </div>
                   <div class="form-group">
                     <label for="content">說明內容</label>
-                    <field
+                    <textarea
                       id="content"
                       type="text"
                       class="form-control"
                       placeholder="請輸入說明內容"
-                      v-model="adjustProductModalData.copiedData.content"
-                      :class="{ 'is-invalid': errors['說明內容'] }"
-                      rules="required"
-                      as="textarea"
+                      v-model.lazy="adjustProductModalData.copiedData.content"
                       name="說明內容"
+                      required
                     >
-                    </field>
-                    <error-message class="invalid-feedback" name="說明內容"> </error-message>
+                    </textarea>
                   </div>
                   <div class="form-group">
                     <div class="form-check">
@@ -224,7 +216,7 @@
                         type="checkbox"
                         :true-value="1"
                         :false-value="0"
-                        v-model="adjustProductModalData.copiedData.is_enabled"
+                        v-model.lazy="adjustProductModalData.copiedData.is_enabled"
                         name="is_enabled"
                       />
                       <label class="form-check-label" for="is_enabled">是否啟用</label>
@@ -237,19 +229,26 @@
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn btn-outline-secondary"
-                data-bs-dismiss="modal"
-                @click="resetForm()"
+                class="btn btn-danger me-auto"
+                @click="
+                  adjustProductModalData.copiedData = {
+                    imagesUrl: [],
+                  }
+                "
               >
+                重置
+              </button>
+
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                 取消
               </button>
 
               <!-- 資料無誤 -->
               <button type="submit" class="btn btn-primary">確認</button>
 
-              {{ adjustProductModalData }}
-            </div></Form
-          >
+              <!-- {{ adjustProductModalData }} -->
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -257,29 +256,29 @@
 </template>
 
 <script>
-// 新增 、 編輯 共用操作的 Modal
-
-import { ref, onUpdated, onBeforeUnmount } from 'vue';
+import { ref } from 'vue';
 import { Modal } from 'bootstrap';
-import { useForm } from 'vee-validate';
 
 export default {
-  setup() {
+  setup(props, { emit }) {
     const adjustProductModal = ref(null); // Modal 的 DOM
     const adjustProductModalData = ref({
       // modal 要用到的資料
       action: '',
-      copiedData: {
-        id: '',
-      },
-      id: ''
+
+      copiedData: {},
+      id: '',
       page: 1,
     });
+    // setErrors
 
-    const { resetForm, errors } = useForm();
-    // const { handleSubmit } = useForm();
-    const onSubmit = () => {
-      console.log('success', errors);
+    const onSubmit = (wholeProductModalData) => {
+      console.log(wholeProductModalData);
+      if (adjustProductModalData.value.action === 'post') {
+        emit('emit-add-newProduct', wholeProductModalData);
+      } else if (adjustProductModalData.value.action === 'put') {
+        emit('emit-edit-product', wholeProductModalData);
+      }
     };
 
     const genertaeModal = ({
@@ -290,23 +289,23 @@ export default {
       console.log(id, page, coipedData, action);
 
       adjustProductModalData.value.copiedData = coipedData;
+
+      // 新增功能、編輯沒有多圖的產品 會預先在 copiedData 物件內加上空的 imagesUrl 陣列
+      if (!adjustProductModalData.value.copiedData.imagesUrl) {
+        adjustProductModalData.value.copiedData.imagesUrl = [];
+      }
+
       adjustProductModalData.value.id = id;
       adjustProductModalData.value.page = page;
       adjustProductModalData.value.action = action;
+      console.log(adjustProductModalData.value.copiedData);
     };
-    onBeforeUnmount(() => {
-      // resetForm();
-    });
-    onUpdated(() => {
-      resetForm();
-    });
 
     return {
       adjustProductModal,
       genertaeModal,
       adjustProductModalData,
       onSubmit,
-      resetForm,
     };
   },
 };
