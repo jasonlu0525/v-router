@@ -25,7 +25,18 @@
           <h3 class="text-center bg-dark text-white py-3 mb-3">顧客資料</h3>
 
           <template v-if="editor.canEdit">
-            <Form v-slot="{ errors }" class="mb-3">
+            <Form
+              v-slot="{ errors }"
+              class="mb-3"
+              @submit.prevent="
+                $emit('emit-update-order', {
+                  id: editor.temp.id,
+                  config: editor.temp,
+                  index: editor.temp.num - 1,
+                  $currentPage: editor.currentPage,
+                })
+              "
+            >
               <section class="mb-3">
                 <div class="mb-3">
                   <label for="name" class="form-label">姓名</label>
@@ -111,20 +122,7 @@
                 >
                   取消
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-primary text-white"
-                  @click="
-                    $emit('emit-update-order', {
-                      id: editor.temp.id,
-                      config: editor.temp,
-                      index: editor.temp.num - 1,
-                      $currentPage: editor.currentPage,
-                    })
-                  "
-                >
-                  更新
-                </button>
+                <button type="submit" class="btn btn-primary text-white">更新</button>
               </div>
             </Form>
           </template>
