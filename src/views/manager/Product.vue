@@ -153,7 +153,7 @@ export default {
 
     const onAddNewProduct = (modalData) => {
       console.log(modalData);
-      console.log(modalData.copiedData.value);
+      console.log(modalData.copiedData);
       console.log({ data: modalData.copiedData });
       postAdminProduct({ config: modalData.copiedData })
         .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
@@ -163,16 +163,8 @@ export default {
         });
     };
     const onEditProduct = (modalData) => {
-      // {
-      //       // modal 要用到的資料
-      //       action: '',
-
-      //       copiedData: {},
-      //       id: '',
-      //       page: 1,
-      //     }
-      console.log(modalData);
-      putAdminProduct({ id: modalData.id, config: modalData.coipedData })
+      console.log(modalData, modalData.id, modalData.copiedData);
+      putAdminProduct({ id: modalData.id, config: modalData.copiedData })
         .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
 
         .then((result) => {

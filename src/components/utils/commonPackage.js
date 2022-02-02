@@ -142,16 +142,6 @@ export default function () {
     config: user,
     generateLoader,
   });
-  // response  {
-  //     "data": {
-  //         "success": false,
-  //         "message": "登入失敗",
-  //         "error": {
-  //             "code": "auth/invalid-email",
-  //             "message": "The email address is badly formatted."
-  //         }
-  //     }
-  // }
 
   /* 標單驗證 API */
 
@@ -234,7 +224,7 @@ export default function () {
     Authorization,
   });
 
-  const postAdminProduct = (generateLoader, Authorization = true, config) => taskQueue({
+  const postAdminProduct = ({ generateLoader, Authorization = true, config }) => taskQueue({
     method: 'post',
     path: 'api/jason/admin/product',
     config: {

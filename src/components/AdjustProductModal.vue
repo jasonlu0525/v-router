@@ -22,7 +22,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="onSubmit(adjustProductModalData)">
+          <form @submit.prevent="onSubmit">
             <div class="row">
               <div class="col-sm-4">
                 <div class="mb-5">
@@ -262,6 +262,7 @@ import { Modal } from 'bootstrap';
 export default {
   setup(props, { emit }) {
     const adjustProductModal = ref(null); // Modal 的 DOM
+    let modal;
     const adjustProductModalData = ref({
       // modal 要用到的資料
       action: '',
@@ -272,20 +273,21 @@ export default {
     });
     // setErrors
 
-    const onSubmit = (wholeProductModalData) => {
-      console.log(wholeProductModalData);
+    const onSubmit = () => {
+      console.log(adjustProductModalData);
       if (adjustProductModalData.value.action === 'post') {
-        emit('emit-add-newProduct', wholeProductModalData);
+        emit('emit-add-newProduct', adjustProductModalData.value);
       } else if (adjustProductModalData.value.action === 'put') {
-        emit('emit-edit-product', wholeProductModalData);
+        emit('emit-edit-product', adjustProductModalData.value);
       }
+      modal.hide();
     };
 
     const genertaeModal = ({
       id, page, coipedData, action,
     }) => {
-      new Modal(adjustProductModal.value).show();
-
+      modal = new Modal(adjustProductModal.value);
+      modal.show();
       console.log(id, page, coipedData, action);
 
       adjustProductModalData.value.copiedData = coipedData;
