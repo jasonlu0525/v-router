@@ -1,20 +1,12 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 export default {
   setup() {
     const singleData = ref({});
-    // const detailModal = new Modal(document.querySelector('#detailModal'));
+
     const detailModal = null;
-    //  const test = ref({});
-    // onMounted(() => {
-    //   detailModal = new Modal(document.querySelector('#detailModal'));
-    // });
 
     const test = ref(null);
-
-    onMounted(() => {
-      console.log(test);
-    });
 
     const editor = ref({
       canEdit: false, // true ==> 切換成 可以修改的表單 false ==> 顯示不包含驗證功能 readonly 的 表班

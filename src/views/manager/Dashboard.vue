@@ -8,10 +8,8 @@
   </div>
 </template>
 <script>
-// import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-// import swal from 'sweetalert';
 import commonPackage from '@/components/utils/commonPackage';
 
 export default {
@@ -19,14 +17,10 @@ export default {
     const { postLoginCheck } = commonPackage();
     const router = useRouter();
 
-    postLoginCheck({})
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        router.push('/login');
-        console.dir(err);
-      });
+    postLoginCheck({}).catch((err) => {
+      router.push('/login');
+      alert(err.response.data.message);
+    });
 
     return {};
   },

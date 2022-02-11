@@ -133,7 +133,6 @@ export default {
     const { getCart, postOrder } = commonPackage();
     const cartData = ref({});
     getCart().then((result) => {
-      console.log(result, 'cart 0k');
       cartData.value = result.data.data;
     });
 
@@ -151,14 +150,14 @@ export default {
       cartData.value = newCartdata;
     };
 
-    const onSubmit = () => {
+    const onSubmit = (values, { resetForm }) => {
       postOrder({ orderInfo: orderInfo.value, message: message.value })
-        .then((result) => {
-          console.log(result);
+        .then(() => {
           refreshCart();
+          resetForm();
         })
         .catch((err) => {
-          console.dir(err);
+          alert(err.response.data.message);
         });
     };
 
@@ -166,16 +165,6 @@ export default {
       const phoneNumber = /^(09)[0-9]{8}$/;
       return phoneNumber.test(value) ? true : '需要正確的電話號碼';
     };
-
-    // const deleteAllCart = () => {
-    //   deleteCartAll()
-    //     .then(() => {
-    //       refreshCart();
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // };
 
     return {
       cartData,

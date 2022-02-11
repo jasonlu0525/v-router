@@ -102,35 +102,27 @@ export default {
     const detailModalDom = ref(null);
 
     getProduct().then((result) => {
-      console.log(result, 'product 0k');
       productData.value = result.data;
     });
     getCart().then((result) => {
-      console.log(result, 'cart 0k');
       cartData.value = result.data.data;
     });
 
     const onChangePage = (page) => {
-      console.log(page);
-
       getProduct(page).then((result) => {
-        console.log(result);
         productData.value = result.data;
       });
     };
 
     const addToCart = function (prodcutInfo) {
-      console.log(prodcutInfo);
-
       postCart(prodcutInfo)
         .then(() => {
           getCart(false).then((result) => {
-            console.log(result, 'cart 0k');
             cartData.value = result.data.data;
           });
         })
         .catch((err) => {
-          console.dir(err);
+          alert(err.respondse.data.message);
         });
     };
 
@@ -140,12 +132,9 @@ export default {
     };
 
     const createModal = (singleProductObj) => {
-      console.log(singleProductObj);
       detailModalDom.value.detailModal = new Modal(document.querySelector('#detailModal')).show();
-      // detailModalDom.value.detailModal.show();
-      console.log(detailModalDom);
+
       detailModalDom.value.singleData = singleProductObj;
-      console.log(detailModalDom);
     };
 
     return {

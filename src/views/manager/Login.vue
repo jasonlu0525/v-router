@@ -37,7 +37,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import swal from 'sweetalert';
+
 import commonPackage from '@/components/utils/commonPackage';
 
 export default {
@@ -51,25 +51,13 @@ export default {
 
     const login = () => {
       console.log(loginData, loginData.value);
-      postLogin(loginData.value)
-        .then((result) => {
-          console.log('yes', result);
-          const { token, expired } = result.data;
-          //           {
-          //     "success": true,
-          //     "message": "登入成功",
-          //     "uid": ...,
-          //     "expired": ...
-          // }
-          console.log(token);
+      postLogin(loginData.value).then((result) => {
+        const { token, expired } = result.data;
 
-          document.cookie = `user=${token};expires=${new Date(expired)};path=/`;
+        document.cookie = `user=${token};expires=${new Date(expired)};path=/`;
 
-          router.replace('dashboard');
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+        router.replace('dashboard');
+      });
     };
 
     return { loginData, login };

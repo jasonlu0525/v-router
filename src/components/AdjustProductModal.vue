@@ -288,7 +288,6 @@ export default {
     }) => {
       modal = new Modal(adjustProductModal.value);
       modal.show();
-      console.log(id, page, coipedData, action);
 
       adjustProductModalData.value.copiedData = coipedData;
 
@@ -301,7 +300,6 @@ export default {
       adjustProductModalData.value.id = id;
       adjustProductModalData.value.page = page;
       adjustProductModalData.value.action = action;
-      console.log(adjustProductModalData.value.copiedData);
     };
 
     return {

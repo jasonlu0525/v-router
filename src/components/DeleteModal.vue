@@ -55,7 +55,6 @@ export default {
     const genertaeModal = (para) => {
       new Modal(deleteModal.value).show();
       delteParameter.value = para;
-      console.log(para);
     };
     return { delteParameter, genertaeModal, deleteModal };
   },

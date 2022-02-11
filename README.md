@@ -1,3 +1,10 @@
+# 代辦事項
+
+- [ ] 清空 console.log()
+- [ ] router 頁面緩存
+- [ ] 重構打 API taskQueue
+
+
 # cli_router
 
 ## Project setup

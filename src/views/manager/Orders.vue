@@ -82,7 +82,7 @@
   <detail-order-modal ref="detailModalDom" @emit-update-order="updateOrder"></detail-order-modal>
 </template>
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 import pagination from '@/components/Pagination.vue';
 import commonPackage from '@/components/utils/commonPackage';
@@ -101,9 +101,6 @@ export default {
     const orderData = ref({});
     const detailModalDom = ref(null);
 
-    onMounted(() => {
-      console.log(detailModalDom);
-    });
     getAdminOrder({})
       .then((result) => {
         orderData.value = result.data;
@@ -132,23 +129,17 @@ export default {
     };
 
     const deleteAllOrders = () => {
-      deleteOrders({})
-        .then(() => {
-          orderData.value.orders = []; // 直接將 orders 清空，減少一次 GET 請求
-        })
-        .catch(() => {});
+      deleteOrders({}).then(() => {
+        orderData.value.orders = []; // 直接將 orders 清空，減少一次 GET 請求
+      });
     };
 
     const orderChangePage = (page) => {
-      getAdminOrder({ page })
-        .then((result) => {
-          orderData.value = result.data;
+      getAdminOrder({ page }).then((result) => {
+        orderData.value = result.data;
 
-          detailModalDom.value.editor.currentPage = page; // 把現在的頁碼 傳送給 modal ， 讓訂單更新之後請求該訂單所在的頁碼
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+        detailModalDom.value.editor.currentPage = page; // 把現在的頁碼 傳送給 modal ， 讓訂單更新之後請求該訂單所在的頁碼
+      });
     };
 
     const openDataModal = ({ item }) => {
@@ -167,18 +158,12 @@ export default {
     }) => {
       putOrder({ id, config, index })
         .then(() => getAdminOrder({ generateLoader: false, page: $currentPage }))
-        .catch((err) => {
-          console.dir(err);
-        })
         .then((result) => {
           orderData.value = result.data;
 
           detailModalDom.value.editor.canEdit = false;
           detailModalDom.value.singleData = orderData.value.orders[index];
           // 將更新後的資料 寫回 modal  ( 使用 orderChangePage() 寫入的 index  )
-        })
-        .catch((err) => {
-          console.dir(err);
         });
     };
 

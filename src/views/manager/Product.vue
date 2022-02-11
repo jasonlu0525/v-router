@@ -101,37 +101,22 @@ export default {
     const deleteModalDom = ref(null); // 元件
     const adjustProdutModalDom = ref(null);
 
-    getAdminProducts({})
-      .then((result) => {
-        adminProductsData.value = result.data;
-        console.log(result);
-      })
-      .catch((err) => {
-        console.dir(err);
-      });
+    getAdminProducts({}).then((result) => {
+      adminProductsData.value = result.data;
+    });
 
     const productChangePage = (page) => {
-      getAdminProducts({ page })
-        .then((result) => {
-          adminProductsData.value = result.data;
-          console.log(result);
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+      getAdminProducts({ page }).then((result) => {
+        adminProductsData.value = result.data;
+      });
     };
 
     const deleteSingleProduct = ({ id, page }) => {
       deleteAdminProduct({ id })
         .then(() => getAdminProducts({ page }))
-        .catch((err) => {
-          console.dir(err);
-        })
+
         .then((result) => {
           adminProductsData.value = result.data;
-        })
-        .catch((err) => {
-          console.dir(err);
         });
     };
 
@@ -152,18 +137,13 @@ export default {
     };
 
     const onAddNewProduct = (modalData) => {
-      console.log(modalData);
-      console.log(modalData.copiedData);
-      console.log({ data: modalData.copiedData });
       postAdminProduct({ config: modalData.copiedData })
         .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
-        .catch((err) => console.dir(err))
         .then((result) => {
           adminProductsData.value = result.data;
         });
     };
     const onEditProduct = (modalData) => {
-      console.log(modalData, modalData.id, modalData.copiedData);
       putAdminProduct({ id: modalData.id, config: modalData.copiedData })
         .then(() => getAdminProducts({ page: modalData.page, generateLoader: false }))
 
